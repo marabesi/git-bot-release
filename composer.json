@@ -1,0 +1,48 @@
+{
+    "name": "slim/slim-skeleton",
+    "description": "A Slim Framework skeleton application for rapid development",
+    "keywords": [
+        "microframework",
+        "rest",
+        "router",
+        "psr7"
+    ],
+    "homepage": "http://github.com/slimphp/Slim-Skeleton",
+    "license": "MIT",
+    "require": {
+        "php": "^7.4",
+        "ext-json": "*",
+        "bref/bref": "^0.5.28",
+        "cache/filesystem-adapter": "^1.0",
+        "monolog/monolog": "^2.1",
+        "php-di/php-di": "^6.2",
+        "slim/psr7": "^1.1",
+        "slim/slim": "^4.5",
+        "slim/twig-view": "^3.1",
+        "vlucas/phpdotenv": "^5.0"
+    },
+    "require-dev": {
+        "jangregor/phpstan-prophecy": "^0.8.0",
+        "phpstan/extension-installer": "^1.0.4",
+        "phpstan/phpstan": "^0.12.32",
+        "phpunit/phpunit": "^8.5"
+    },
+    "config": {
+        "process-timeout": 0,
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "start": "php -S localhost:8080 -t public",
+        "test": "phpunit"
+    }
+}
