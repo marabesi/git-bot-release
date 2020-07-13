@@ -13,12 +13,14 @@
         "php": "^7.4",
         "ext-json": "*",
         "bref/bref": "^0.5.28",
-        "cache/filesystem-adapter": "^1.0",
+        "ergebnis/json-printer": "^3.1",
         "monolog/monolog": "^2.1",
         "php-di/php-di": "^6.2",
         "slim/psr7": "^1.1",
         "slim/slim": "^4.5",
         "slim/twig-view": "^3.1",
+        "symfony/cache": "^5.1",
+        "tmarois/filebase": "^1.0",
         "vlucas/phpdotenv": "^5.0"
     },
     "require-dev": {

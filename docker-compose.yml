@@ -1,17 +1,20 @@
 version: "3.5"
 
 services:
-  web:
-    image: bref/fpm-dev-gateway
+  app:
+    build:
+      context: .
     ports:
-      - '8000:80'
+      - '8181:8181'
     volumes:
-      - .:/var/task
-    depends_on:
-      - php
+      - .:/var/www
     environment:
-      HANDLER: public/index.php
-  php:
-    image: bref/php-74-fpm-dev
-    volumes:
-      - .:/var/task:ro
+      CLIENT_ID: $CLIENT_ID
+      SECRET: $SECRET
+      REDIRECT_URL: $REDIRECT_URL
+      STATE: $STATE
+      GITLAB_URL: $GITLAB_URL
+      WEBHOOK_INCOME_URL: $WEBHOOK_INCOME_URL
+      WEBHOOK_TOKEN: $WEBHOOK_TOKEN
+      WEBHOOK_PUSH: $WEBHOOK_PUSH
+      WEBHOOK_ENABLE_SSL_VERIFICATION: $WEBHOOK_ENABLE_SSL_VERIFICATION

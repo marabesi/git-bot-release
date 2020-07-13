@@ -1,13 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Application\Actions\Gitlab;
 
-use App\Domain\Gitlab\Settings;
+use App\Domain\Gitlab\Entity\Settings;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Slim\Views\Twig;
-use App\Domain\Gitlab\GenerateToken;
-use App\Domain\Gitlab\GitlabRepository;
+use App\Domain\Gitlab\Authentication\GenerateToken;
+use App\Domain\Gitlab\Authentication\TokenRepository;
 
 class Welcome
 {
@@ -15,13 +16,13 @@ class Welcome
     private Twig $twig;
     private Settings $settings;
     private GenerateToken $generateGitlabToken;
-    private GitlabRepository $gitlabRepository;
+    private TokenRepository $gitlabRepository;
 
     public function __construct(
         Twig $twig,
         Settings $settings,
         GenerateToken $generateGitlabToken,
-        GitlabRepository $gitlabRepository
+        TokenRepository $gitlabRepository
     ) {
         $this->twig = $twig;
         $this->settings = $settings;
@@ -35,6 +36,11 @@ class Welcome
         $error = $params['error'] ?? false;
         $code = $params['code'] ?? false;
         $state = $params['state'] ?? false;
+        $token = $this->gitlabRepository->getToken();
+
+        if (!empty($token)) {
+            return $response->withAddedHeader('Location', '/authorized');
+        }
 
         if ($error) {
             return $response->withAddedHeader('Location', '/unauthorized');

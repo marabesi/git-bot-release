@@ -1,0 +1,36 @@
+{% extends 'layouts/main.twig' %}
+
+{% block content %}
+    <h1>{{ project.name_with_namespace }}</h1>
+    <p>{{ project.description }}</p>
+    <a href="{{ project.web_url }}" target="_blank">See on gitlab</a>
+
+    <h2>web hooks</h2>
+
+    {% if not already_registered %}
+        <form method="post" action="/projects/{{ project.id }}/hook">
+            <button type="submit">Enable deploy via conventional commit</button>
+        </form>
+    {% else %}
+        <p>Hook for deploying with convetional commit already registered! Enjoy!</p>
+        <form method="post" action="/projects/{{ project.id }}/hook/{{ webhook.id }}">
+            <button type="submit">Remove deploy</button>
+        </form>
+
+        <h2>Files queue</h2>
+
+        {% for file in files %}
+            <form method="post" action="/projects/{{ project.id }}/file/{{ file.id }}">
+                <p>{{ file.getPath }}{{ file.getName }}</p>
+                <button type="submit">delete file from queue</button>
+            </form>
+        {% endfor %}
+
+        <form method="post" action="/projects/{{ project.id }}/file">
+            <input type="text" name="fullName" />
+            <button type="submit">Add file</button>
+        </form>
+    {% endif %}
+
+    <a href="/authorized">Project list</a>
+{% endblock %}
