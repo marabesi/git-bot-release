@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\GenerateRelease;
@@ -20,11 +21,16 @@ class Dispatch
     public function release(Release $release)
     {
         $actions = [];
+        $files = $release->getFiles();
+
+        if (count($files) === 0) {
+            return;
+        }
 
         /**
          * @var $file File
          */
-        foreach ($release->getFiles() as $file) {
+        foreach ($files as $file) {
             $actions['actions'][] = [
                 'action' => 'update',
                 'file_path' => $file->getPath(),

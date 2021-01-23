@@ -10,9 +10,6 @@ use Slim\Factory\ServerRequestCreatorFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$dotEnv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-$dotEnv->load();
-
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 

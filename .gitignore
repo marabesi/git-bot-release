@@ -1,12 +1,13 @@
 .idea/
 .vscode/
-/coverage/
-/vendor/
-/logs/*
-!/logs/README.md
+coverage/
+vendor/
+logs/*
+logs/README.md
 .phpunit.result.cache
 .env
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+.serverless/

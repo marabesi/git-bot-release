@@ -5,6 +5,7 @@ namespace App\Domain\GenerateRelease;
 
 use App\Domain\ConventionalCommit\FilesUpdater;
 use App\Domain\ConventionalCommit\FindVersion;
+use App\Domain\DomainException\NoFilesToRelease;
 use App\Domain\Gitlab\Entity\File;
 use App\Domain\Gitlab\Entity\Release;
 use App\Domain\Gitlab\File\FileRepository;
@@ -44,17 +45,24 @@ class Assembly
 
     public function packVersion(): Release
     {
+        $filesToRelease = $this->getFilesToWriteRelease();
+
+        if (count($filesToRelease) === 0) {
+            throw new NoFilesToRelease();
+        }
+
         $files = [];
-        $versionToRelease = $this->findVersion->versionToRelease();
 
         /** @var File $file */
-        foreach ($this->getFilesToWriteRelease() as $file) {
+        foreach ($filesToRelease as $file) {
             $files[] = $this->fileRepository->findFile(
                 $this->findVersion->getProjectId(),
                 sprintf('%s%s', $file->getPath(), $file->getName()),
                 $this->branchName
             );
         }
+
+        $versionToRelease = $this->findVersion->versionToRelease();
 
         $release = new Release();
         $release->setProjectId($this->findVersion->getProjectId());
