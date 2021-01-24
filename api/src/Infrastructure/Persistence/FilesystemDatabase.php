@@ -18,11 +18,6 @@ class FilesystemDatabase implements FilesToReleaseRepository
         $this->database = $database;
     }
 
-    private function generateId(string $path, string $name, int $projectId): string
-    {
-        return $projectId . base64_encode(sprintf('%s%s', $path, $name));
-    }
-
     public function save(int $projectId, File $file): bool
     {
         $document = new Document($this->database);
