@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Infrastructure\Gateway\Gitlab;
 
 use App\Domain\Gitlab\Tag\TagRepository;
+use App\Infrastructure\Gateway\Gitlab\Exception\FailedToCreateTag;
 use App\Infrastructure\Gateway\NetworkRequestAuthenticated;
-use Exception;
 
 class TagApiRepository implements TagRepository
 {
@@ -18,7 +18,6 @@ class TagApiRepository implements TagRepository
 
     public function createTag(int $projectId, string $name, string $fromBranch)
     {
-
         $url = sprintf('api/v4/projects/%s/repository/tags', $projectId);
 
         $response = $this->networkRequestAuthenticated->post($url, [
@@ -30,6 +29,6 @@ class TagApiRepository implements TagRepository
             return true;
         }
 
-        throw new Exception($response['message']);
+        throw new FailedToCreateTag($response['message']);
     }
 }

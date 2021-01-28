@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Infrastructure\Gateway\Gitlab;
 
 use App\Domain\Gitlab\Project\ProjectsRepository as Repository;
+use App\Infrastructure\Gateway\Gitlab\Exception\FailedToFetchProjects;
 use App\Infrastructure\Gateway\NetworkRequestAuthenticated;
-use Exception;
 
 class ProjectsApiRepository implements Repository
 {
@@ -23,7 +23,7 @@ class ProjectsApiRepository implements Repository
         ]);
 
         if (array_key_exists('error_description', $projects)) {
-            throw new Exception($projects['error_description']);
+            throw new FailedToFetchProjects($projects['error_description']);
         }
 
         return $projects;

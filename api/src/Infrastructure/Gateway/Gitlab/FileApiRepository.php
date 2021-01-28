@@ -5,6 +5,7 @@ namespace App\Infrastructure\Gateway\Gitlab;
 
 use App\Domain\Gitlab\Entity\File;
 use App\Domain\Gitlab\File\FileRepository;
+use App\Infrastructure\Gateway\Gitlab\Exception\CouldNotUpdateFile;
 use App\Infrastructure\Gateway\NetworkRequestAuthenticated;
 use Exception;
 
@@ -25,7 +26,7 @@ class FileApiRepository implements FileRepository
         $updatedFile = $this->networkRequestAuthenticated->put($url, $params);
 
         if (array_key_exists('message', $updatedFile)) {
-            throw new Exception($updatedFile['message']);
+            throw new CouldNotUpdateFile($updatedFile['message']);
         }
 
         return $updatedFile;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Infrastructure\Gateway\Gitlab;
 
 use App\Domain\Gitlab\Pipeline\PipelineRepository;
+use App\Infrastructure\Gateway\Gitlab\Exception\FailedToCreateTag;
 use App\Infrastructure\Gateway\NetworkRequestAuthenticated;
-use Exception;
 
 class PipelineApiRepository implements PipelineRepository
 {
@@ -28,6 +28,6 @@ class PipelineApiRepository implements PipelineRepository
             return true;
         }
 
-        throw new Exception($response['message']['base'][0]);
+        throw new FailedToCreateTag($response['message']['base'][0]);
     }
 }

@@ -2,16 +2,16 @@
 declare(strict_types=1);
 
 use Slim\App;
-use App\Application\Actions\Gitlab\Auth\RequestToken;
-use App\Application\Actions\Gitlab\Auth\Unauthorized;
-use App\Application\Actions\Gitlab\Auth\Authorized;
-use App\Application\Actions\Gitlab\Welcome;
-use App\Application\Actions\Gitlab\Projects\Detail;
-use App\Application\Actions\Gitlab\Webhook\Register;
-use App\Application\Actions\Gitlab\Webhook\Income;
-use App\Application\Actions\Gitlab\Webhook\Delete;
-use App\Application\Actions\Gitlab\File\Create;
-use App\Application\Actions\Gitlab\File\Delete as FileDelete;
+use App\Web\Actions\Gitlab\Auth\RequestToken;
+use App\Web\Actions\Gitlab\Auth\Unauthorized;
+use App\Web\Actions\Gitlab\Auth\Authorized;
+use App\Web\Actions\Gitlab\Welcome;
+use App\Web\Actions\Gitlab\Projects\Detail;
+use App\Web\Actions\Gitlab\Webhook\Register;
+use App\Web\Actions\Gitlab\Webhook\Income;
+use App\Web\Actions\Gitlab\Webhook\Delete;
+use App\Web\Actions\Gitlab\File\Create;
+use App\Web\Actions\Gitlab\File\Delete as FileDelete;
 
 use Slim\Routing\RouteCollectorProxy;
 
