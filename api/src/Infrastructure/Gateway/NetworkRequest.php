@@ -3,27 +3,23 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Gateway;
 
-use Exception;
+use GuzzleHttp\Client;
 
 class NetworkRequest
 {
+    private Client $client;
+
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
 
     public function post(string $url, array $fieldsToPost): array
     {
-        $content = http_build_query($fieldsToPost);
+        $response = $this->client->request('POST', $url, $fieldsToPost);
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+        $body = $response->getBody()->getContents();
 
-        $result = curl_exec($ch);
-        $error = curl_error($ch);
-
-        if ($error) {
-            throw new Exception($error);
-        }
-
-        return (array) json_decode($result, true);
+        return (array) json_decode($body, true, 512, JSON_THROW_ON_ERROR);
     }
 }

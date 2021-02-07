@@ -32,6 +32,7 @@ use App\Domain\Gitlab\Version\VersionRepository;
 use App\Domain\Gitlab\Project\FilesToReleaseRepository;
 use App\Infrastructure\Persistence\FilesystemDatabase;
 use Filebase\Database;
+use GuzzleHttp\Client;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -54,26 +55,28 @@ return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         Settings::class => function() {
             return new Settings(
-                $_ENV['GITLAB_URL'],
-                $_ENV['CLIENT_ID'],
-                $_ENV['SECRET'],
-                $_ENV['REDIRECT_URL'],
-                $_ENV['STATE'],
+                $_ENV['GITLAB_URL'] ?? '',
+                $_ENV['CLIENT_ID'] ?? '',
+                $_ENV['SECRET'] ?? '',
+                $_ENV['REDIRECT_URL'] ?? '',
+                $_ENV['STATE'] ?? '',
             );
         }
     ]);
 
     $containerBuilder->addDefinitions([
         NetworkRequest::class => function() {
-            return new NetworkRequest();
+            return new NetworkRequest(new Client());
         }
     ]);
 
     $containerBuilder->addDefinitions([
          Twig::class => function () {
+            $debug = $_ENV['DEBUG'] ?? '';
+
             $view = Twig::create('view', [
                 'cache' => 'var/cache',
-                'debug' => $_ENV['DEBUG'] === 'true',
+                'debug' =>  $debug === 'true',
             ]);
 
             $view->addExtension(new TwigExtension());

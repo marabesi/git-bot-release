@@ -14,6 +14,7 @@
         "ext-json": "*",
         "bref/bref": "^1.0",
         "ergebnis/json-printer": "^3.1",
+        "guzzlehttp/guzzle": "^7.0",
         "monolog/monolog": "^2.1",
         "php-di/php-di": "^6.2",
         "slim/psr7": "^1.1",
