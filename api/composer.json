@@ -47,13 +47,12 @@
     },
     "scripts": {
         "start": "php -S localhost:8080 -t public",
-        "test:all": "phpunit tests/",
-        "test:coverage": "XDEBUG_MODE=coverage phpunit --coverage-html coverage/ tests/",
-        "test:unit": "phpunit tests/Unit",
+        "test:all": "php vendor/bin/phpunit tests/",
+        "test:coverage": "XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-html coverage/ tests/",
+        "test:unit": "php vendor/bin/phpunit tests/Unit",
         "test:watch": [
             "Composer\\Config::disableProcessTimeout",
             "phpunit-watcher watch < /dev/tty"
-        ],
-        "coverage": "XDEBUG_MODE=coverage phpunit --coverage-html coverage/"
+        ]
     }
 }
