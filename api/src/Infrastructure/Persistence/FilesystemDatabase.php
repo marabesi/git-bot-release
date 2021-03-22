@@ -8,6 +8,7 @@ use App\Domain\Gitlab\Project\FilesToReleaseRepository;
 use Filebase\Database;
 use Filebase\Document;
 use Exception;
+use Filebase\Query;
 
 class FilesystemDatabase implements FilesToReleaseRepository
 {
@@ -49,6 +50,7 @@ class FilesystemDatabase implements FilesToReleaseRepository
     public function findAll(int $projectId): array
     {
         $files = [];
+        /** @var Query $documents */
         $documents = $this->database->query()
             ->where(['projectId' => $projectId])
             ->resultDocuments();

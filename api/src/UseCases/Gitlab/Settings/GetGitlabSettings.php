@@ -5,8 +5,9 @@ namespace App\UseCases\Gitlab\Settings;
 use App\Domain\Gitlab\Entity\Settings;
 use App\Infrastructure\Persistence\Gitlab\SettingsFilesystemRepository;
 
-class SaveGitlabSettings
+class GetGitlabSettings
 {
+
     private SettingsFilesystemRepository $repository;
 
     public function __construct(SettingsFilesystemRepository $repository)
@@ -14,8 +15,8 @@ class SaveGitlabSettings
         $this->repository = $repository;
     }
 
-    public function save(Settings $setting): bool
+    public function list(): Settings
     {
-        return $this->repository->store($setting);
+        return $this->repository->get();
     }
 }

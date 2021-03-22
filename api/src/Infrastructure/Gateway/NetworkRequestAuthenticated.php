@@ -75,7 +75,6 @@ class NetworkRequestAuthenticated
         $ch = curl_init($url);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//        curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch,  CURLOPT_HTTPHEADER, [
             'Authorization: Bearer ' . $this->token,
             "cache-control: no-cache",

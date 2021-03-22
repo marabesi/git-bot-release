@@ -31,6 +31,7 @@ use App\Infrastructure\Gateway\Gitlab\VersionApiRepository;
 use App\Domain\Gitlab\Version\VersionRepository;
 use App\Domain\Gitlab\Project\FilesToReleaseRepository;
 use App\Infrastructure\Persistence\FilesystemDatabase;
+use App\Domain\Gitlab\Authentication\TokenNotFound;
 use Filebase\Database;
 use GuzzleHttp\Client;
 
@@ -106,8 +107,14 @@ return function (ContainerBuilder $containerBuilder) {
 
     $containerBuilder->addDefinitions([
         NetworkRequestAuthenticated::class => function(ContainerInterface $c) {
+            try {
+                $token = $c->get(TokenRepository::class)->getToken();
+            } catch (TokenNotFound $error) {
+                $token = '';
+            }
+
             return new NetworkRequestAuthenticated(
-                $c->get(TokenRepository::class)->getToken(),
+                $token,
                 $c->get(Settings::class)
             );
         }

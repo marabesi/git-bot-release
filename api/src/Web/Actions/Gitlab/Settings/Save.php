@@ -19,7 +19,7 @@ class Save
 
     public function __invoke(Request $request, Response $response)
     {
-        $body = $request->getParsedBody();
+        $body = $request->getBody();
 
         $this->saveSettings->save(new Settings(
             $body['gitlab_url'],

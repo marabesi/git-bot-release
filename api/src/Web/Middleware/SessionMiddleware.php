@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Web\Middleware;
 
 use App\Domain\Gitlab\Authentication\TokenMiddlewareChecker;
+use App\Domain\Gitlab\Authentication\TokenNotFound;
 use App\Domain\Gitlab\Version\VersionRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -20,7 +21,8 @@ class SessionMiddleware implements Middleware, TokenMiddlewareChecker
         '/',
         '/request-token',
         '/unauthorized',
-        '/hook/income'
+        '/hook/income',
+//        '/settings',
     ];
 
     private TokenRepository $gitlabRepository;
@@ -29,8 +31,7 @@ class SessionMiddleware implements Middleware, TokenMiddlewareChecker
     public function __construct(
         TokenRepository $gitlabRepository,
         VersionRepository $versionRepository
-    )
-    {
+    ) {
         $this->gitlabRepository = $gitlabRepository;
         $this->versionRepository = $versionRepository;
     }
@@ -67,10 +68,11 @@ class SessionMiddleware implements Middleware, TokenMiddlewareChecker
 
     public function hasToken(Request $request): bool
     {
-
-        if ($this->gitlabRepository->getToken()) {
-            return true;
-        }
+        try {
+            if ($this->gitlabRepository->getToken()) {
+                return true;
+            }
+        } catch (TokenNotFound $error) { }
 
         return false;
     }

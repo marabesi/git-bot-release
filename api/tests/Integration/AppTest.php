@@ -78,7 +78,7 @@ trait AppTest
      * @param string|UriInterface $uri The URI
      * @param array $serverParams The server parameters
      *
-     * @return ServerRequestInterface
+     * @return ResponseInterface
      */
     protected function createRequest(
         string $method,

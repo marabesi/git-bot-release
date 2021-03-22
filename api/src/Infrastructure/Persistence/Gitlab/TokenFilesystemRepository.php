@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Gitlab;
 
+use App\Domain\Gitlab\Authentication\CouldNotEraseTokenException;
 use App\Domain\Gitlab\Authentication\CouldNotStoreTokenException;
+use App\Domain\Gitlab\Authentication\TokenNotFound;
 use App\Domain\Gitlab\Authentication\TokenRepository;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\CacheItem;
@@ -37,7 +39,13 @@ class TokenFilesystemRepository implements TokenRepository
     {
         /** @var $token CacheItem */
         $token = $this->filesystemPool->getItem(self::CACHE_KEY);
-        return (string) $token->get();
+        $found = (string) $token->get();
+
+        if (!$found) {
+            throw new TokenNotFound();
+        }
+
+        return $found;
     }
 
     public function deleteToken(): bool
@@ -46,6 +54,6 @@ class TokenFilesystemRepository implements TokenRepository
             return true;
         }
 
-        throw new CouldNotStoreTokenException();
+        throw new CouldNotEraseTokenException();
     }
 }

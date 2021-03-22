@@ -1,14 +1,18 @@
 <?php
 
-namespace Tests\Unit\UseCases\Gitlab\Settings;
+namespace Tests\Integration\Settings;
 
 use App\Domain\Gitlab\Entity\Settings;
 use App\Infrastructure\Persistence\Gitlab\SettingsFilesystemRepository;
-use App\UseCases\Gitlab\Settings\SaveGitlabSettings;
+use App\UseCases\Gitlab\Settings\GetGitlabSettings;
 use PHPUnit\Framework\TestCase;
+use Tests\Integration\AppTest;
 
-class SaveGitlabSettingsTest extends TestCase
+class GetGitlabSettingTest extends TestCase
 {
+
+    use AppTest;
+
     private Settings $settings;
 
     public function setUp(): void
@@ -23,22 +27,19 @@ class SaveGitlabSettingsTest extends TestCase
         );
     }
 
-    public function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
-    public function test_persist_gitlab_settings()
+    public function test_list_stored_settings()
     {
         $repository = $this->createMock(SettingsFilesystemRepository::class);
         $repository->expects($this->once())
-            ->method('store')
-            ->willReturn(true);
+            ->method('get')
+            ->willReturn($this->settings);
 
-        $useCase = new SaveGitlabSettings($repository);
-        $this->assertTrue(
-            $useCase->save($this->settings),
-            'Error trying to save settings'
+        $useCase = new GetGitlabSettings($repository);
+        $this->assertSame(
+            $this->settings,
+            $useCase->list(),
+            'The settings saved and the settings retrieved are no the same'
         );
     }
+
 }
