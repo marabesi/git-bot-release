@@ -94,12 +94,11 @@ return function (ContainerBuilder $containerBuilder) {
     ]);
 
     $containerBuilder->addDefinitions([
-        TokenRepository::class => function(ContainerInterface $c) {
+        TokenRepository::class => function() {
             return new TokenFilesystemRepository(
                 new FilesystemAdapter(
-                    'cache',
+                    'token',
                     0,
-                    __DIR__ . '/../var/storage'
                 ),
             );
         }
@@ -115,7 +114,8 @@ return function (ContainerBuilder $containerBuilder) {
 
             return new NetworkRequestAuthenticated(
                 $token,
-                $c->get(Settings::class)
+                $c->get(Settings::class),
+                new Client()
             );
         }
     ]);

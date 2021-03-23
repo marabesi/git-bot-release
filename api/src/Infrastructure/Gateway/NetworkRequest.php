@@ -16,9 +16,9 @@ class NetworkRequest
 
     public function post(string $url, array $fieldsToPost): array
     {
-        $response = $this->client->request('POST', $url, $fieldsToPost);
+        $response = $this->client->request('POST', $url, ['form_params' => $fieldsToPost ]);
 
-        $body = $response->getBody()->getContents();
+        $body = (string) $response->getBody()->getContents();
 
         return (array) json_decode($body, true, 512, JSON_THROW_ON_ERROR);
     }

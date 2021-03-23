@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\Integration\Settings;
+namespace Tests\Feature\Settings;
 
 use App\Domain\Gitlab\Authentication\CouldNotEraseTokenException;
 use App\Domain\Gitlab\Authentication\CouldNotStoreTokenException;
@@ -13,7 +13,7 @@ use App\Infrastructure\Persistence\Gitlab\SettingsFilesystemRepository;
 use App\UseCases\Gitlab\Settings\GetGitlabSettings;
 use App\UseCases\Gitlab\Settings\SaveGitlabSettings;
 use PHPUnit\Framework\TestCase;
-use Tests\Integration\AppTest;
+use Tests\Feature\AppTest;
 
 class SettingsTest extends TestCase
 {
@@ -136,7 +136,6 @@ class NoTokenStub implements TokenRepository
 
 class NetworkStub extends NetworkRequestAuthenticated
 {
-
     public function get(string $url, array $params = []): array
     {
         return [];

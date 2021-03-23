@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Integration;
+namespace Tests\Feature;
 
 use DI\Container;
 use InvalidArgumentException;

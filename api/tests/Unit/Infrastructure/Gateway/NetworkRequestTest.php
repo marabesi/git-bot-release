@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Gateway;
 
@@ -11,12 +12,16 @@ use JsonException;
 class NetworkRequestTest extends TestCase
 {
 
+    private $parameters = [
+        'form_params' => []
+    ];
+
     public function test_dispatch_post_request_without_parameters()
     {
         $client = $this->createMock(Client::class);
         $client->expects($this->once())
             ->method('request')
-            ->with('POST','/random', [])
+            ->with('POST','/random', $this->parameters)
             ->willReturn(new Response(200, [], '{"message": true}'));
 
         $network = new NetworkRequest($client);
@@ -32,7 +37,7 @@ class NetworkRequestTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->expects($this->once())
             ->method('request')
-            ->with('POST','/random', [])
+            ->with('POST','/random', $this->parameters)
             ->willReturn(new Response(200, [], 'message'));
 
         $network = new NetworkRequest($client);

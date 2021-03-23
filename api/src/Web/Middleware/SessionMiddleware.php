@@ -66,14 +66,12 @@ class SessionMiddleware implements Middleware, TokenMiddlewareChecker
         return $handler->handle($request);
     }
 
-    public function hasToken(Request $request): bool
+    public function hasToken(Request $request): string
     {
         try {
-            if ($this->gitlabRepository->getToken()) {
-                return true;
-            }
+            return $this->gitlabRepository->getToken();
         } catch (TokenNotFound $error) { }
 
-        return false;
+        return '';
     }
 }

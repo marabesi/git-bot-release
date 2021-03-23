@@ -32,36 +32,38 @@ class Welcome
     }
 
     public function __invoke(Request $request, Response $response) {
+        $params = $request->getQueryParams();
+        $error = $params['error'] ?? false;
+        $code = $params['code'] ?? false;
+        $state = $params['state'] ?? false;
+        $token = '';
+
         try {
-            $params = $request->getQueryParams();
-            $error = $params['error'] ?? false;
-            $code = $params['code'] ?? false;
-            $state = $params['state'] ?? false;
             $token = $this->gitlabRepository->getToken();
+        } catch (TokenNotFound $tokenNotFound) { }
 
-            if (!empty($token)) {
-                return $response->withAddedHeader('Location', '/authorized');
-            }
+        if (!empty($token)) {
+            return $response->withHeader('Location', '/authorized');
+        }
 
-            if ($error) {
-                return $response->withAddedHeader('Location', '/unauthorized');
-            }
+        if ($error) {
+            return $response->withHeader('Location', '/unauthorized');
+        }
 
-            if ($code && $state) {
-                $token = $this->generateGitlabToken->requestToken([
-                    'client_id' => $this->settings->getClientId(),
-                    'client_secret' => $this->settings->getSecret(),
-                    'code' => $code,
-                    'grant_type' => $this->settings->getGrantType(),
-                    'redirect_uri' => $this->settings->getRedirectUrl(),
-                ]);
+        if ($code && $state) {
+            $token = $this->generateGitlabToken->requestToken([
+                'client_id' => $this->settings->getClientId(),
+                'client_secret' => $this->settings->getSecret(),
+                'code' => $code,
+                'grant_type' => $this->settings->getGrantType(),
+                'redirect_uri' => $this->settings->getRedirectUrl(),
+            ]);
 
-                $this->gitlabRepository->storeToken($token);
+            $this->gitlabRepository->storeToken($token);
 
-                return $response->withAddedHeader('Location', '/authorized');
-            }
+            return $response->withHeader('Location', '/authorized');
+        }
 
-        } catch (TokenNotFound $error) { }
 
         return $this->twig->render($response, 'templates/welcome.twig');
     }

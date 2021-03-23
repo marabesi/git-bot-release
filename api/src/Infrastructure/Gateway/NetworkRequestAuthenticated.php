@@ -4,111 +4,69 @@ declare(strict_types=1);
 namespace App\Infrastructure\Gateway;
 
 use App\Domain\Gitlab\Entity\Settings;
-use Exception;
+use GuzzleHttp\Client;
 
 class NetworkRequestAuthenticated
 {
-    private string $token;
     private Settings $settings;
+    private Client $client;
+    private $headers;
 
-    public function __construct(string $token, Settings $settings)
+    public function __construct(string $token, Settings $settings, Client $client)
     {
-        $this->token = $token;
         $this->settings = $settings;
+        $this->client = $client;
+        $this->headers = [
+            'authorization' => sprintf('Bearer %s', $token),
+            'cache-control' => 'no-cache',
+            'content-type' => 'application/json',
+        ];
     }
 
     public function put(string $url, array $fieldsToPut): array
     {
-        $content = json_encode($fieldsToPut);
+        $response = $this->client->request(
+            'PUT',
+            $this->settings->resolveGitlabUri($url),
+            $this->headers,
+            $fieldsToPut
+        );
 
-        $ch = curl_init($this->settings->resolveGitlabUri($url));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-        curl_setopt($ch,  CURLOPT_HTTPHEADER, [
-            'Authorization: Bearer ' . $this->token,
-            "cache-control: no-cache",
-            "content-type: application/json",
-        ]);
-
-        $result = curl_exec($ch);
-        $error = curl_error($ch);
-
-        if ($error) {
-            throw new Exception($error);
-        }
-
-        return (array) json_decode($result, true);
+        return (array) json_decode((string) $response->getBody(), true);
     }
 
     public function post(string $url, array $fieldsToPost): array
     {
-        $content = json_encode($fieldsToPost);
+        $response = $this->client->request(
+            'POST',
+            $this->settings->resolveGitlabUri($url),
+            $this->headers,
+            $fieldsToPost
+        );
 
-        $ch = curl_init($this->settings->resolveGitlabUri($url));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-        curl_setopt($ch,  CURLOPT_HTTPHEADER, [
-            'Authorization: Bearer ' . $this->token,
-            "cache-control: no-cache",
-            "content-type: application/json",
-        ]);
-
-        $result = curl_exec($ch);
-        $error = curl_error($ch);
-
-        if ($error) {
-            throw new Exception($error);
-        }
-
-        return (array) json_decode($result, true);
+        return (array) json_decode((string) $response->getBody(), true);
     }
 
     public function get(string $url, array $params = []): array
     {
-        $query = http_build_query($params);
+        $response = $this->client->request(
+            'GET',
+            $this->settings->resolveGitlabUri($url),
+            $this->headers,
+            $params
+        );
 
-        $gitlab = $this->settings->resolveGitlabUri($url);
-        $url = sprintf("$gitlab?%s", $query);
-
-        $ch = curl_init($url);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch,  CURLOPT_HTTPHEADER, [
-            'Authorization: Bearer ' . $this->token,
-            "cache-control: no-cache",
-            "content-type: application/json",
-        ]);
-
-        $result = curl_exec($ch);
-        $error = curl_error($ch);
-
-        if ($error) {
-            throw new Exception($error);
-        }
-
-        return (array) json_decode($result, true);
+        return (array) json_decode((string) $response->getBody(), true);
     }
 
     public function delete($url): array
     {
-        $ch = curl_init($this->settings->resolveGitlabUri($url));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-        curl_setopt($ch,  CURLOPT_HTTPHEADER, [
-            'Authorization: Bearer ' . $this->token,
-            "cache-control: no-cache",
-            "content-type: application/json",
-        ]);
+        $response = $this->client->request(
+            'DELETE',
+            $this->settings->resolveGitlabUri($url),
+            $this->headers,
+        );
 
-        $result = curl_exec($ch);
-        $error = curl_error($ch);
-
-        if ($error) {
-            throw new Exception($error);
-        }
-
-        return (array) json_decode($result, true);
+        return (array) json_decode((string) $response->getBody(), true);
     }
 }
