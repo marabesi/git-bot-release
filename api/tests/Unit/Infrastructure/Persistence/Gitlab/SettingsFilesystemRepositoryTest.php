@@ -55,4 +55,23 @@ class SettingsFilesystemRepositoryTest extends TestCase
             $repository->get()
         );
     }
+
+    public function test_return_empty_settings_if_does_not_exists()
+    {
+        $cachedItem = new CacheItem();
+
+        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter->expects($this->once())
+            ->method('getItem')
+            ->willReturn($cachedItem);
+
+        $repository = new SettingsFilesystemRepository($adapter);
+        $storedSettings = $repository->get();
+
+        $this->assertEquals('', $storedSettings->getGitlabUrl());
+        $this->assertEquals('', $storedSettings->getClientId());
+        $this->assertEquals('', $storedSettings->getSecret());
+        $this->assertEquals('', $storedSettings->getRedirectUrl());
+        $this->assertEquals('', $storedSettings->getState());
+    }
 }

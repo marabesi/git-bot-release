@@ -84,7 +84,7 @@ trait AppTest
         string $method,
         $uri,
         array $serverParams = []
-    ) {
+    ): ResponseInterface {
         $request = (new ServerRequestFactory())->createServerRequest($method, $uri, $serverParams);
         $response = $this->app->handle($request);
         return $response;

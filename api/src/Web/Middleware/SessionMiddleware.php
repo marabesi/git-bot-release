@@ -22,7 +22,7 @@ class SessionMiddleware implements Middleware, TokenMiddlewareChecker
         '/request-token',
         '/unauthorized',
         '/hook/income',
-//        '/settings',
+        '/settings',
     ];
 
     private TokenRepository $gitlabRepository;

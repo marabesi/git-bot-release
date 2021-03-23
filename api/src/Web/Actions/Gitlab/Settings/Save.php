@@ -19,8 +19,7 @@ class Save
 
     public function __invoke(Request $request, Response $response)
     {
-        $body = $request->getBody();
-
+        $body = $request->getServerParams();
         $this->saveSettings->save(new Settings(
             $body['gitlab_url'],
             $body['client_id'],
@@ -28,9 +27,6 @@ class Save
             $body['redirect_url'],
             $body['state'],
         ));
-
-        $response->withHeader('Location', '/settings');
-
-        return $response;
+        return $response->withHeader('Location', '/settings');
     }
 }

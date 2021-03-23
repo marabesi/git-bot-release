@@ -13,6 +13,7 @@ use App\Web\Actions\Gitlab\Webhook\Delete;
 use App\Web\Actions\Gitlab\File\Create;
 use App\Web\Actions\Gitlab\File\Delete as FileDelete;
 use App\Web\Actions\Gitlab\Settings\Save;
+use App\Web\Actions\Gitlab\Settings\Get;
 
 use Slim\Routing\RouteCollectorProxy;
 
@@ -22,6 +23,7 @@ return function (App $app) {
     $app->get('/unauthorized', Unauthorized::class)->setName('unauthorized');
     $app->get('/authorized', Authorized::class)->setName('authorized');
     $app->post('/settings', Save::class)->setName('settings');
+    $app->get('/settings', Get::class)->setName('get_settings');
 
     $app->group('/projects/{id}', function(RouteCollectorProxy $group) {
         $group->get('/detail', Detail::class)->setName('project_detail');

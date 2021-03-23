@@ -30,6 +30,18 @@ class SettingsFilesystemRepository
     {
         /** @var CacheItem $cached */
         $cached = $this->adapter->getItem(self::CACHE_KEY);
-        return $cached->get();
+        $settings = $cached->get();
+
+        if ($settings) {
+            return $settings;
+        }
+
+        return new Settings(
+            '',
+            '',
+            '',
+            '',
+            '',
+        );
     }
 }

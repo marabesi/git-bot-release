@@ -35,4 +35,4 @@ jobs:
       run: composer install -d api/ --prefer-dist --no-progress --no-suggest
 
     - name: Run test suite
-      run: composer run-script -d api/ test:all
+      run: composer run -d api/ test:all
