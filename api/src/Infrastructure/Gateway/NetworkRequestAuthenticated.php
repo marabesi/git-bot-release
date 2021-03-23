@@ -28,8 +28,10 @@ class NetworkRequestAuthenticated
         $response = $this->client->request(
             'PUT',
             $this->settings->resolveGitlabUri($url),
-            $this->headers,
-            $fieldsToPut
+            [
+                'headers' => $this->headers,
+                'json' => $fieldsToPut,
+            ],
         );
 
         return (array) json_decode((string) $response->getBody(), true);
@@ -40,8 +42,10 @@ class NetworkRequestAuthenticated
         $response = $this->client->request(
             'POST',
             $this->settings->resolveGitlabUri($url),
-            $this->headers,
-            $fieldsToPost
+            [
+                'headers' => $this->headers,
+                'json' => $fieldsToPost,
+            ],
         );
 
         return (array) json_decode((string) $response->getBody(), true);
@@ -49,11 +53,17 @@ class NetworkRequestAuthenticated
 
     public function get(string $url, array $params = []): array
     {
+        $query = http_build_query($params);
+
+        $gitlab = $this->settings->resolveGitlabUri($url);
+        $url = sprintf("$gitlab?%s", $query);
+
         $response = $this->client->request(
             'GET',
-            $this->settings->resolveGitlabUri($url),
-            $this->headers,
-            $params
+            $url,
+            [
+                'headers' => $this->headers
+            ],
         );
 
         return (array) json_decode((string) $response->getBody(), true);
@@ -64,7 +74,9 @@ class NetworkRequestAuthenticated
         $response = $this->client->request(
             'DELETE',
             $this->settings->resolveGitlabUri($url),
-            $this->headers,
+            [
+                'headers' => $this->headers
+            ],
         );
 
         return (array) json_decode((string) $response->getBody(), true);

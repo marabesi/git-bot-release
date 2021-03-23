@@ -42,8 +42,9 @@ class SessionMiddleware implements Middleware, TokenMiddlewareChecker
     public function process(Request $request, RequestHandler $handler): Response
     {
         $token = $this->hasToken($request);
+        $currentPath = $request->getUri()->getPath();
 
-        if (!$token && !in_array($request->getUri()->getPath(), self::ALLOWED_ROUTES)) {
+        if (!$token && !in_array($currentPath, self::ALLOWED_ROUTES)) {
             return (new SlimResponse())
                 ->withHeader('Location', '/');
         }
@@ -53,11 +54,9 @@ class SessionMiddleware implements Middleware, TokenMiddlewareChecker
                 $this->versionRepository->fetchCurrent();
             }
         } catch (Exception $error) {
-            if (in_array($request->getUri()->getPath(), self::ALLOWED_ROUTES)) {
+            if (in_array($currentPath, self::ALLOWED_ROUTES)) {
                 return $handler->handle($request);
             }
-
-            $this->gitlabRepository->deleteToken();
 
             return (new SlimResponse())
                 ->withHeader('Location', '/');

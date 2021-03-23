@@ -22,7 +22,7 @@ class Authorized
     public function __invoke(Request $request, Response $response)
     {
         return $this->twig->render($response,  'templates/authorized.twig',
-            [ 'projects' => $this->projectList->fetch() ]
+            $this->projectList->fetch()
         );
     }
 }

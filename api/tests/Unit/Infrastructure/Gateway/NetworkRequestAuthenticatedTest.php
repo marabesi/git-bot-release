@@ -37,11 +37,15 @@ class NetworkRequestAuthenticatedTest extends TestCase
     public function test_post_request_with_authentication_headers()
     {
         $endpoint = sprintf('%s/endpoint', $this->settings->getGitlabUrl());
+        $toPost = [
+            'headers' => $this->headers,
+            'json' => $this->requestParameters,
+        ];
 
         $client = $this->createMock(Client::class);
         $client->expects($this->once())
             ->method('request')
-            ->with('POST', $endpoint, $this->headers, $this->requestParameters);
+            ->with('POST', $endpoint, $toPost);
 
         $network = new NetworkRequestAuthenticated(
             self::TOKEN,
@@ -55,11 +59,15 @@ class NetworkRequestAuthenticatedTest extends TestCase
     public function test_put_request_with_authentication_headers()
     {
         $endpoint = sprintf('%s/endpoint', $this->settings->getGitlabUrl());
+        $toPut = [
+            'headers' => $this->headers,
+            'json' => $this->requestParameters,
+        ];
 
         $client = $this->createMock(Client::class);
         $client->expects($this->once())
             ->method('request')
-            ->with('PUT', $endpoint, $this->headers, $this->requestParameters);
+            ->with('PUT', $endpoint, $toPut);
 
         $network = new NetworkRequestAuthenticated(
             self::TOKEN,
@@ -72,12 +80,12 @@ class NetworkRequestAuthenticatedTest extends TestCase
 
     public function test_get_request_with_authentication_headers()
     {
-        $endpoint = sprintf('%s/endpoint', $this->settings->getGitlabUrl());
+        $endpoint = sprintf('%s/endpoint?param1=param1', $this->settings->getGitlabUrl());
 
         $client = $this->createMock(Client::class);
         $client->expects($this->once())
             ->method('request')
-            ->with('GET', $endpoint, $this->headers, $this->requestParameters);
+            ->with('GET', $endpoint, [ 'headers' => $this->headers ]);
 
         $network = new NetworkRequestAuthenticated(
             self::TOKEN,
@@ -95,7 +103,7 @@ class NetworkRequestAuthenticatedTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->expects($this->once())
             ->method('request')
-            ->with('DELETE', $endpoint, $this->headers);
+            ->with('DELETE', $endpoint, [ 'headers' => $this->headers ]);
 
         $network = new NetworkRequestAuthenticated(
             self::TOKEN,
