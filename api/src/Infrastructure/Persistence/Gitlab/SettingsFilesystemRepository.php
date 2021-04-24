@@ -20,7 +20,7 @@ class SettingsFilesystemRepository
 
     public function store(Settings $settings)
     {
-        $cache = new CacheItem();
+        $cache = $this->adapter->getItem(self::CACHE_KEY);
         $cache->set($settings);
 
         return $this->adapter->save($cache);

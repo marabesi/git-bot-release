@@ -1,0 +1,31 @@
+{% extends 'layouts/main.twig' %}
+
+{% block content %}
+    <form action="{{ postTo }}" method="post">
+        <label>
+            gitlab url
+            <input type="text" name="gitlab_url" value="{{ setting.getGitlabUrl() }}" />
+        </label>
+        <br />
+        <label>
+            client id
+            <input type="text" name="client_id" value="{{ setting.getClientId() }}" />
+        </label>
+        <br />
+        <label>
+            secret
+            <input type="text" name="secret" value="{{ setting.getSecret() }}" />
+        </label>
+        <br />
+        <label>
+            redirect url
+            <input type="text" name="redirect_url" value="{{ setting.getRedirectUrl() }}" />
+        </label>
+        <br />
+        <label>
+            state
+            <input type="text" name="state" value="{{ setting.getState() }}" />
+        </label>
+        <input type="submit" value="Save" />
+    </form>
+{% endblock %}

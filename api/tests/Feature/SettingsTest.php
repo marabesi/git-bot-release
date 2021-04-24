@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Settings;
 
 use App\Domain\Gitlab\Entity\Settings;
-use App\Infrastructure\Gateway\NetworkRequestAuthenticated;
-use App\Infrastructure\Persistence\Gitlab\SettingsFilesystemRepository;
 use App\UseCases\Gitlab\Settings\GetGitlabSettings;
 use App\UseCases\Gitlab\Settings\SaveGitlabSettings;
 use PHPUnit\Framework\TestCase;
@@ -47,6 +45,7 @@ class SettingsTest extends TestCase
         ]);
 
         $redirectTo = $response->getHeaderLine('Location');
+
         $this->assertEquals(self::SETTINGS_URI, $redirectTo);
     }
 
@@ -67,21 +66,5 @@ class SettingsTest extends TestCase
         $this->assertStringContainsString($this->settings->getSecret(), $body, 'secret does not match');
         $this->assertStringContainsString($this->settings->getRedirectUrl(), $body, 'redirect url does not match');
         $this->assertStringContainsString($this->settings->getState(), $body, 'state does not match');
-    }
-}
-
-class NetworkStub extends NetworkRequestAuthenticated
-{
-    public function get(string $url, array $params = []): array
-    {
-        return [];
-    }
-}
-
-class SettingsFilesystemStub extends SettingsFilesystemRepository
-{
-    public function store(Settings $settings): bool
-    {
-        return true;
     }
 }

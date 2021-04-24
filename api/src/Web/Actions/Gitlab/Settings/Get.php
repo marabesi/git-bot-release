@@ -6,33 +6,23 @@ namespace App\Web\Actions\Gitlab\Settings;
 use App\UseCases\Gitlab\Settings\GetGitlabSettings;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
+use Slim\Views\Twig;
 
 class Get
 {
     private GetGitlabSettings $settingsUseCase;
+    private Twig $twig;
 
-    public function __construct(GetGitlabSettings $settingsUseCase)
+    public function __construct(GetGitlabSettings $settingsUseCase, Twig $twig)
     {
         $this->settingsUseCase = $settingsUseCase;
+        $this->twig = $twig;
     }
 
     public function __invoke(Request $request, Response $response)
     {
-        $setting = $this->settingsUseCase->list();
-
-        $response->getBody()->write(sprintf('
-                gitlab url: %s
-                client id: %s
-                secret: %s
-                redirect url: %s
-                state: %s',
-                $setting->getGitlabUrl(),
-                $setting->getClientId(),
-                $setting->getSecret(),
-                $setting->getRedirectUrl(),
-                $setting->getState(),
-            )
-        );
-        return $response;
+        return $this->twig->render($response,  'templates/settings/index.twig', [
+            'setting' => $this->settingsUseCase->list(),
+        ]);
     }
 }

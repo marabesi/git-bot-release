@@ -76,18 +76,19 @@ trait AppTest
      *
      * @param string $method The HTTP method
      * @param string|UriInterface $uri The URI
-     * @param array $serverParams The server parameters
+     * @param array $bodyParams Parameters to send with the request
      *
      * @return ResponseInterface
      */
     protected function createRequest(
         string $method,
         $uri,
-        array $serverParams = [],
+        array $bodyParams = [],
         array $queryParams = []
     ): ResponseInterface {
         $request = (new ServerRequestFactory())
-            ->createServerRequest($method, $uri, $serverParams)
+            ->createServerRequest($method, $uri)
+            ->withParsedBody($bodyParams)
             ->withQueryParams($queryParams);
         return $this->app->handle($request);
     }

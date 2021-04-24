@@ -32,6 +32,9 @@ class SettingsFilesystemRepositoryTest extends TestCase
         $adapter->expects($this->once())
             ->method('save')
             ->willReturn(true);
+        $adapter->expects($this->once())
+            ->method('getItem')
+            ->willReturn(new CacheItem());
 
         $repository = new SettingsFilesystemRepository($adapter);
         $this->assertTrue(
