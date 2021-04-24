@@ -83,11 +83,13 @@ trait AppTest
     protected function createRequest(
         string $method,
         $uri,
-        array $serverParams = []
+        array $serverParams = [],
+        array $queryParams = []
     ): ResponseInterface {
-        $request = (new ServerRequestFactory())->createServerRequest($method, $uri, $serverParams);
-        $response = $this->app->handle($request);
-        return $response;
+        $request = (new ServerRequestFactory())
+            ->createServerRequest($method, $uri, $serverParams)
+            ->withQueryParams($queryParams);
+        return $this->app->handle($request);
     }
 
     /**

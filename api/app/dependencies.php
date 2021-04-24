@@ -75,8 +75,8 @@ return function (ContainerBuilder $containerBuilder) {
          Twig::class => function () {
             $debug = $_ENV['DEBUG'] ?? '';
 
-            $view = Twig::create('view', [
-                'cache' => 'var/cache',
+            $view = Twig::create(__DIR__ . '/../view', [
+                'cache' => __DIR__ . '/../var/cache',
                 'debug' =>  $debug === 'true',
             ]);
 

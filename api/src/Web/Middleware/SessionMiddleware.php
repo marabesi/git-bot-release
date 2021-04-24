@@ -6,6 +6,7 @@ namespace App\Web\Middleware;
 use App\Domain\Gitlab\Authentication\TokenMiddlewareChecker;
 use App\Domain\Gitlab\Authentication\TokenNotFound;
 use App\Domain\Gitlab\Version\VersionRepository;
+use App\Web\Routes;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface as Middleware;
@@ -16,14 +17,6 @@ use Exception;
 
 class SessionMiddleware implements Middleware, TokenMiddlewareChecker
 {
-
-    const ALLOWED_ROUTES = [
-        '/',
-        '/request-token',
-        '/unauthorized',
-        '/hook/income',
-        '/settings',
-    ];
 
     private TokenRepository $gitlabRepository;
     private VersionRepository $versionRepository;
@@ -36,6 +29,15 @@ class SessionMiddleware implements Middleware, TokenMiddlewareChecker
         $this->versionRepository = $versionRepository;
     }
 
+    public function hasToken(Request $request): string
+    {
+        try {
+            return $this->gitlabRepository->getToken();
+        } catch (TokenNotFound $error) { }
+
+        return '';
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -44,7 +46,7 @@ class SessionMiddleware implements Middleware, TokenMiddlewareChecker
         $token = $this->hasToken($request);
         $currentPath = $request->getUri()->getPath();
 
-        if (!$token && !in_array($currentPath, self::ALLOWED_ROUTES)) {
+        if (!$token && !in_array($currentPath, Routes::getAllowedRoutes())) {
             return (new SlimResponse())
                 ->withHeader('Location', '/');
         }
@@ -54,7 +56,7 @@ class SessionMiddleware implements Middleware, TokenMiddlewareChecker
                 $this->versionRepository->fetchCurrent();
             }
         } catch (Exception $error) {
-            if (in_array($currentPath, self::ALLOWED_ROUTES)) {
+            if (in_array($currentPath, Routes::getAllowedRoutes())) {
                 return $handler->handle($request);
             }
 
@@ -63,14 +65,5 @@ class SessionMiddleware implements Middleware, TokenMiddlewareChecker
         }
 
         return $handler->handle($request);
-    }
-
-    public function hasToken(Request $request): string
-    {
-        try {
-            return $this->gitlabRepository->getToken();
-        } catch (TokenNotFound $error) { }
-
-        return '';
     }
 }

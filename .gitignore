@@ -11,3 +11,4 @@ logs/README.md
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 .serverless/
+*.log

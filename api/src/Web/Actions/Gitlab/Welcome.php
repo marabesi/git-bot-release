@@ -17,18 +17,18 @@ class Welcome
     private Twig $twig;
     private Settings $settings;
     private GenerateToken $generateGitlabToken;
-    private TokenRepository $gitlabRepository;
+    private TokenRepository $tokenRepository;
 
     public function __construct(
         Twig $twig,
         Settings $settings,
         GenerateToken $generateGitlabToken,
-        TokenRepository $gitlabRepository
+        TokenRepository $tokenRepository
     ) {
         $this->twig = $twig;
         $this->settings = $settings;
         $this->generateGitlabToken = $generateGitlabToken;
-        $this->gitlabRepository = $gitlabRepository;
+        $this->tokenRepository = $tokenRepository;
     }
 
     public function __invoke(Request $request, Response $response) {
@@ -39,7 +39,7 @@ class Welcome
         $token = '';
 
         try {
-            $token = $this->gitlabRepository->getToken();
+            $token = $this->tokenRepository->getToken();
         } catch (TokenNotFound $tokenNotFound) { }
 
         if (!empty($token)) {
@@ -59,11 +59,10 @@ class Welcome
                 'redirect_uri' => $this->settings->getRedirectUrl(),
             ]);
 
-            $this->gitlabRepository->storeToken($token);
+            $this->tokenRepository->storeToken($token);
 
             return $response->withHeader('Location', '/authorized');
         }
-
 
         return $this->twig->render($response, 'templates/welcome.twig');
     }

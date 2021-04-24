@@ -3,10 +3,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Settings;
 
-use App\Domain\Gitlab\Authentication\CouldNotEraseTokenException;
-use App\Domain\Gitlab\Authentication\CouldNotStoreTokenException;
-use App\Domain\Gitlab\Authentication\TokenNotFound;
-use App\Domain\Gitlab\Authentication\TokenRepository;
 use App\Domain\Gitlab\Entity\Settings;
 use App\Infrastructure\Gateway\NetworkRequestAuthenticated;
 use App\Infrastructure\Persistence\Gitlab\SettingsFilesystemRepository;
@@ -71,66 +67,6 @@ class SettingsTest extends TestCase
         $this->assertStringContainsString($this->settings->getSecret(), $body, 'secret does not match');
         $this->assertStringContainsString($this->settings->getRedirectUrl(), $body, 'redirect url does not match');
         $this->assertStringContainsString($this->settings->getState(), $body, 'state does not match');
-    }
-}
-
-class TokenStub implements TokenRepository
-{
-
-    /**
-     * @param $token string
-     * @return bool
-     * @throws CouldNotStoreTokenException
-     */
-    public function storeToken(string $token): bool
-    {
-        return true;
-    }
-
-    /**
-     * @throws TokenNotFound
-     */
-    public function getToken(): string
-    {
-        return 'fake_token';
-    }
-
-    /**
-     * @throws CouldNotEraseTokenException
-     */
-    public function deleteToken(): bool
-    {
-        return true;
-    }
-}
-
-class NoTokenStub implements TokenRepository
-{
-
-    /**
-     * @param $token string
-     * @return bool
-     * @throws CouldNotStoreTokenException
-     */
-    public function storeToken(string $token): bool
-    {
-        return false;
-    }
-
-    /**
-     * @throws TokenNotFound
-     */
-    public function getToken(): string
-    {
-        return '';
-    }
-
-    /**
-     * @throws CouldNotEraseTokenException
-     */
-    public function deleteToken(): bool
-    {
-        return false;
     }
 }
 
