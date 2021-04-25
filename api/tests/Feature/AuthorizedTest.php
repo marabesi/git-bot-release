@@ -5,8 +5,12 @@ namespace Tests\Feature;
 use App\Domain\Gitlab\Authentication\TokenRepository;
 use App\Domain\Gitlab\Project\ProjectsRepository;
 use App\Domain\Gitlab\Version\VersionRepository;
+use App\Web\Middleware\SessionMiddleware;
 use PHPUnit\Framework\TestCase;
+use Slim\Psr7\Factory\ServerRequestFactory;
+use Tests\Feature\Stubs\WithExpiredFakeToken;
 use Tests\Feature\Stubs\WithFakeToken;
+use Tests\Feature\Stubs\FakeVersionError;
 use Tests\Feature\Stubs\WithFakeVersion;
 
 class AuthorizedTest extends TestCase
@@ -31,5 +35,25 @@ class AuthorizedTest extends TestCase
 
         $response = $this->createRequest('GET', '/authorized');
         $this->assertStringContainsString('<a href="/projects/1/detail">Fake project</a>', (string) $response->getBody());
+    }
+
+    public function test_should_delete_token_if_expired()
+    {
+        $tokenRepository = $this->createMock(TokenRepository::class);
+        $tokenRepository->expects($this->at(0))
+            ->method('getToken')
+            ->willReturn('fake_expired_token');
+        $tokenRepository->expects($this->at(1))
+            ->method('getToken')
+            ->willReturn('');
+        $tokenRepository->expects($this->once())
+            ->method('deleteToken')
+            ->willReturn(true);
+        $this->container->set(TokenRepository::class, $tokenRepository);
+        $this->container->set(VersionRepository::class, new WithExpiredFakeToken());
+
+        $response = $this->createRequest('GET', '/');
+
+        $this->assertEmpty($response->getHeaderLine('Location'));
     }
 }

@@ -5,6 +5,7 @@ namespace App\Web\Middleware;
 
 use App\Domain\Gitlab\Authentication\TokenMiddlewareChecker;
 use App\Domain\Gitlab\Authentication\TokenNotFound;
+use App\Domain\Gitlab\Authentication\TokenRevoked;
 use App\Domain\Gitlab\Version\VersionRepository;
 use App\Web\Routes;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -18,21 +19,21 @@ use Exception;
 class SessionMiddleware implements Middleware, TokenMiddlewareChecker
 {
 
-    private TokenRepository $gitlabRepository;
+    private TokenRepository $tokenRepository;
     private VersionRepository $versionRepository;
 
     public function __construct(
         TokenRepository $gitlabRepository,
         VersionRepository $versionRepository
     ) {
-        $this->gitlabRepository = $gitlabRepository;
+        $this->tokenRepository = $gitlabRepository;
         $this->versionRepository = $versionRepository;
     }
 
-    public function hasToken(Request $request): string
+    private function hasToken(Request $request): string
     {
         try {
-            return $this->gitlabRepository->getToken();
+            return $this->tokenRepository->getToken();
         } catch (TokenNotFound $error) { }
 
         return '';
@@ -55,6 +56,8 @@ class SessionMiddleware implements Middleware, TokenMiddlewareChecker
             if ($token) {
                 $this->versionRepository->fetchCurrent();
             }
+        } catch (TokenRevoked $tokenRevoked) {
+            $this->tokenRepository->deleteToken();
         } catch (Exception $error) {
             if (in_array($currentPath, Routes::getAllowedRoutes())) {
                 return $handler->handle($request);

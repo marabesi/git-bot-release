@@ -3,10 +3,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Gateway;
 
+use App\Domain\Gitlab\Authentication\TokenRevoked;
 use App\Domain\Gitlab\Entity\Settings;
 use App\Infrastructure\Gateway\NetworkRequestAuthenticated;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use PHPUnit\Framework\TestCase;
+use Slim\Psr7\Factory\ResponseFactory;
+use Slim\Psr7\Factory\ServerRequestFactory;
 
 class NetworkRequestAuthenticatedTest extends TestCase
 {
@@ -21,6 +25,7 @@ class NetworkRequestAuthenticatedTest extends TestCase
         'cache-control' => 'no-cache',
         'content-type' => 'application/json',
     ];
+    private string $endpoint = 'endpoint';
 
     public function setUp(): void
     {
@@ -36,7 +41,7 @@ class NetworkRequestAuthenticatedTest extends TestCase
 
     public function test_post_request_with_authentication_headers()
     {
-        $endpoint = sprintf('%s/endpoint', $this->settings->getGitlabUrl());
+        $endpoint = sprintf('%s/%s', $this->settings->getGitlabUrl(), $this->endpoint);
         $toPost = [
             'headers' => $this->headers,
             'json' => $this->requestParameters,
@@ -58,7 +63,7 @@ class NetworkRequestAuthenticatedTest extends TestCase
 
     public function test_put_request_with_authentication_headers()
     {
-        $endpoint = sprintf('%s/endpoint', $this->settings->getGitlabUrl());
+        $endpoint = sprintf('%s/%s', $this->settings->getGitlabUrl(), $this->endpoint);
         $toPut = [
             'headers' => $this->headers,
             'json' => $this->requestParameters,
@@ -112,5 +117,46 @@ class NetworkRequestAuthenticatedTest extends TestCase
         );
 
         $network->delete('endpoint');
+    }
+
+    public function test_error_revoked_token_if_get_request_is_unauthorized()
+    {
+        $this->expectException(TokenRevoked::class);
+
+        $request = (new ServerRequestFactory())->createServerRequest('GET', $this->endpoint);
+        $response = (new ResponseFactory())->createResponse(401);
+
+        $client = $this->createMock(Client::class);
+        $client->expects($this->once())
+            ->method('request')
+            ->willThrowException(new RequestException('unauthorized', $request, $response));
+
+        $network = new NetworkRequestAuthenticated(
+            self::TOKEN,
+            $this->settings,
+            $client
+        );
+
+        $network->get($this->endpoint);
+    }
+
+    public function test_bubble_up_error_if_status_code_is_not_unauthorized()
+    {
+        $this->expectException(RequestException::class);
+
+        $request = (new ServerRequestFactory())->createServerRequest('GET', $this->endpoint);
+
+        $client = $this->createMock(Client::class);
+        $client->expects($this->once())
+            ->method('request')
+            ->willThrowException(new RequestException('unauthorized', $request));
+
+        $network = new NetworkRequestAuthenticated(
+            self::TOKEN,
+            $this->settings,
+            $client
+        );
+
+        $network->get($this->endpoint);
     }
 }

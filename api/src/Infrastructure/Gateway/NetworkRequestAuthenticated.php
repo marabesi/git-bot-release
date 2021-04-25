@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Gateway;
 
+use App\Domain\Gitlab\Authentication\TokenRevoked;
 use App\Domain\Gitlab\Entity\Settings;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 
 class NetworkRequestAuthenticated
 {
     private Settings $settings;
     private Client $client;
-    private $headers;
+    private array $headers;
 
     public function __construct(string $token, Settings $settings, Client $client)
     {
@@ -51,22 +54,36 @@ class NetworkRequestAuthenticated
         return (array) json_decode((string) $response->getBody(), true);
     }
 
+    /**
+     * @throws GuzzleException
+     * @throws TokenRevoked
+     */
     public function get(string $url, array $params = []): array
     {
-        $query = http_build_query($params);
+        try {
 
-        $gitlab = $this->settings->resolveGitlabUri($url);
-        $url = sprintf("$gitlab?%s", $query);
+            $query = http_build_query($params);
 
-        $response = $this->client->request(
-            'GET',
-            $url,
-            [
-                'headers' => $this->headers
-            ],
-        );
+            $gitlab = $this->settings->resolveGitlabUri($url);
+            $url = sprintf("$gitlab?%s", $query);
 
-        return (array) json_decode((string) $response->getBody(), true);
+            $response = $this->client->request(
+                'GET',
+                $url,
+                [
+                    'headers' => $this->headers
+                ],
+            );
+
+
+            return (array) json_decode((string) $response->getBody(), true);
+        } catch (RequestException $error){
+            if ($error->getCode() === 401) {
+                throw new TokenRevoked();
+            }
+
+            throw $error;
+        }
     }
 
     public function delete($url): array

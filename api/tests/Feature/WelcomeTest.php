@@ -8,7 +8,7 @@ use App\Domain\Gitlab\Entity\Settings;
 use App\Domain\Gitlab\Version\VersionRepository;
 use PHPUnit\Framework\TestCase;
 use Tests\Feature\Stubs\WithFakeToken;
-use Tests\Feature\Stubs\WithFakeVersion;
+use Tests\Feature\Stubs\FakeVersionError;
 use Tests\Feature\Stubs\WithoutToken;
 
 class WelcomeTest extends TestCase
@@ -56,7 +56,7 @@ class WelcomeTest extends TestCase
 
     public function test_redirect_to_authorized_page_if_token_exists()
     {
-        $this->container->set(VersionRepository::class, new WithFakeVersion());
+        $this->container->set(VersionRepository::class, new FakeVersionError());
         $this->container->set(TokenRepository::class, new WithFakeToken());
 
         $response = $this->createRequest('GET', '/');

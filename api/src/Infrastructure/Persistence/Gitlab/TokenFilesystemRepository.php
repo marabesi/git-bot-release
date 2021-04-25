@@ -7,6 +7,7 @@ use App\Domain\Gitlab\Authentication\CouldNotEraseTokenException;
 use App\Domain\Gitlab\Authentication\CouldNotStoreTokenException;
 use App\Domain\Gitlab\Authentication\TokenNotFound;
 use App\Domain\Gitlab\Authentication\TokenRepository;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\CacheItem;
 
@@ -35,6 +36,10 @@ class TokenFilesystemRepository implements TokenRepository
         throw new CouldNotStoreTokenException('could not store token');
     }
 
+    /**
+     * @throws TokenNotFound
+     * @throws InvalidArgumentException
+     */
     public function getToken(): string
     {
         /** @var $token CacheItem */

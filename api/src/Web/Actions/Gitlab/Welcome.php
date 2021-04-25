@@ -5,6 +5,7 @@ namespace App\Web\Actions\Gitlab;
 
 use App\Domain\Gitlab\Authentication\TokenNotFound;
 use App\Domain\Gitlab\Entity\Settings;
+use Exception;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Slim\Views\Twig;
@@ -40,7 +41,7 @@ class Welcome
 
         try {
             $token = $this->tokenRepository->getToken();
-        } catch (TokenNotFound $tokenNotFound) { }
+        } catch (Exception $tokenNotFound) { }
 
         if (!empty($token)) {
             return $response->withHeader('Location', '/authorized');

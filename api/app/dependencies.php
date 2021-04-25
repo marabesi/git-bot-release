@@ -140,7 +140,6 @@ return function (ContainerBuilder $containerBuilder) {
         FileRepository::class => function(ContainerInterface $c) {
             return new FileApiRepository(
                 $c->get(NetworkRequestAuthenticated::class),
-                $c->get(FileApiRepository::class)
             );
         }
     ]);
