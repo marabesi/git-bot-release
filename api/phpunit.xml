@@ -30,4 +30,7 @@
 <!--    <logging>-->
 <!--        <log type="testdox-text" target="php://stdout"/>-->
 <!--    </logging>-->
+    <php>
+        <env name="DEBUG" value="true" force="true" />
+    </php>
 </phpunit>

@@ -46,7 +46,7 @@ class SettingsTest extends TestCase
 
         $redirectTo = $response->getHeaderLine('Location');
 
-        $this->assertEquals(self::SETTINGS_URI, $redirectTo);
+        $this->assertEquals('/', $redirectTo);
     }
 
     public function test_list_settings()

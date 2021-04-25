@@ -67,17 +67,21 @@ return function (ContainerBuilder $containerBuilder) {
     ]);
 
     $containerBuilder->addDefinitions([
-         Twig::class => function () {
+        Twig::class => function () {
             $debug = $_ENV['DEBUG'] ?? '';
-
-            $view = Twig::create(__DIR__ . '/../view', [
-                'cache' => __DIR__ . '/../var/cache',
+            $config = [
                 'debug' =>  $debug === 'true',
-            ]);
+            ];
+
+            if (!$debug) {
+                $config['cache'] = __DIR__ . '/../var/cache';
+            }
+
+            $view = Twig::create(__DIR__ . '/../view', $config);
 
             $view->addExtension(new TwigExtension());
-        return $view;
-    }]);
+            return $view;
+        }]);
 
     $containerBuilder->addDefinitions([
         GenerateToken::class => function(ContainerInterface $c) {
@@ -159,28 +163,28 @@ return function (ContainerBuilder $containerBuilder) {
     ]);
 
     $containerBuilder->addDefinitions([
-       TagRepository::class => function(ContainerInterface $c) {
+        TagRepository::class => function(ContainerInterface $c) {
             return new TagApiRepository(
                 $c->get(NetworkRequestAuthenticated::class)
             );
-       }
+        }
     ]);
 
     $containerBuilder->addDefinitions([
-       VersionRepository::class => function(ContainerInterface $c) {
+        VersionRepository::class => function(ContainerInterface $c) {
             return new VersionApiRepository(
                 $c->get(NetworkRequestAuthenticated::class)
             );
-       }
+        }
     ]);
 
     $containerBuilder->addDefinitions([
-       FilesToReleaseRepository::class => function() {
+        FilesToReleaseRepository::class => function() {
             return new FilesystemDatabase(
                 new Database([
                     'dir' => __DIR__ . '/../var/storage/database'
                 ])
             );
-       }
+        }
     ]);
 };

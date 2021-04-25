@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Web\Actions\Gitlab\Settings;
 
@@ -28,6 +29,6 @@ class Save
             $body['redirect_url'],
             $body['state'],
         ));
-        return $response->withHeader('Location', '/settings');
+        return $response->withHeader('Location', '/');
     }
 }

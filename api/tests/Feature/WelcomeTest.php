@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Feature;
 
@@ -20,6 +21,12 @@ class WelcomeTest extends TestCase
     {
         $response = $this->createRequest('GET', '/');
         $this->assertStringContainsString('<a href="/request-token">Request gitlab permission</a>', (string) $response->getBody());
+    }
+
+    public function test_renders_settings_link()
+    {
+        $response = $this->createRequest('GET', '/');
+        $this->assertStringContainsString('<a href="/settings">settings</a>', (string) $response->getBody());
     }
 
     public function test_request_gitlab_token()
