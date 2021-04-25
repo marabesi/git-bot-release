@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 use App\Web\Handlers\HttpErrorHandler;
@@ -11,14 +10,14 @@ use Slim\Factory\ServerRequestCreatorFactory;
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 
-if (false) { // Should be set to true in production
-    $containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
-}
-
 // Set up settings
 $settings = require __DIR__ . '/../app/settings.php';
 $settings($containerBuilder);
 
+$debug = require __DIR__ . '/debug.php';
+if ($debug['debug']) {
+    $containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
+}
 // Set up dependencies
 $dependencies = require __DIR__ . '/../app/dependencies.php';
 $dependencies($containerBuilder);
@@ -64,7 +63,7 @@ register_shutdown_function($shutdownHandler);
 $app->addRoutingMiddleware();
 
 // Add Error Middleware
-$errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, false);
+$errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, true);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
 
 return [

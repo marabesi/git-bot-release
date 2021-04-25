@@ -67,19 +67,19 @@ return function (ContainerBuilder $containerBuilder) {
     ]);
 
     $containerBuilder->addDefinitions([
-        Twig::class => function () {
-            $debug = $_ENV['DEBUG'] ?? '';
+        Twig::class => function (ContainerInterface $c) {
+            $debug = $c->get('settings')['debug'];
             $config = [
-                'debug' =>  $debug === 'true',
+                'debug' => $debug,
             ];
 
-            if (!$debug) {
+            if ($debug === false) {
                 $config['cache'] = __DIR__ . '/../var/cache';
             }
 
             $view = Twig::create(__DIR__ . '/../view', $config);
-
             $view->addExtension(new TwigExtension());
+
             return $view;
         }]);
 
