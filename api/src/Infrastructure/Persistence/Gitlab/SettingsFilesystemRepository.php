@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Gitlab;
 
 use App\Domain\Gitlab\Entity\Settings;
+use App\Domain\Gitlab\Project\SettingsRepository;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\CacheItem;
 
-class SettingsFilesystemRepository
+class SettingsFilesystemRepository implements SettingsRepository
 {
 
-    private const CACHE_KEY = 'settings';
+    private const CACHE_KEY = 'setting';
     private FilesystemAdapter $adapter;
 
     public function __construct(FilesystemAdapter $adapter)
@@ -18,7 +19,7 @@ class SettingsFilesystemRepository
         $this->adapter = $adapter;
     }
 
-    public function store(Settings $settings)
+    public function store(Settings $settings): bool
     {
         $cache = $this->adapter->getItem(self::CACHE_KEY);
         $cache->set($settings);

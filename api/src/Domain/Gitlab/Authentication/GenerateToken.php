@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Gitlab\Authentication;
 
+use App\Domain\Gitlab\Project\SettingsRepository;
 use App\Infrastructure\Gateway\NetworkRequest;
 use App\Domain\Gitlab\Entity\Settings;
 use Exception;
@@ -14,18 +15,19 @@ class GenerateToken
     public const OAUTH_AUTHORIZE = 'oauth/authorize';
 
     private NetworkRequest $gitlabRequest;
-    private Settings $settings;
+    private SettingsRepository $settingsRepository;
 
-    public function __construct(NetworkRequest $gitlabRequest, Settings $settings)
+    public function __construct(NetworkRequest $gitlabRequest, SettingsRepository $settings)
     {
         $this->gitlabRequest = $gitlabRequest;
-        $this->settings = $settings;
+        $this->settingsRepository = $settings;
     }
 
     public function requestToken(array $params): string
     {
+        $settings = $this->settingsRepository->get();
         $response = $this->gitlabRequest->post(
-            $this->settings->resolveGitlabUri(self::OAUTH_TOKEN_URI),
+            $settings->resolveGitlabUri(self::OAUTH_TOKEN_URI),
             $params
         );
 

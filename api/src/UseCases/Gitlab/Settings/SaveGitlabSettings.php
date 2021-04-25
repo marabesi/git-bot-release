@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace App\UseCases\Gitlab\Settings;
 
 use App\Domain\Gitlab\Entity\Settings;
-use App\Infrastructure\Persistence\Gitlab\SettingsFilesystemRepository;
+use App\Domain\Gitlab\Project\SettingsRepository;
 
 class SaveGitlabSettings
 {
-    private SettingsFilesystemRepository $repository;
+    private SettingsRepository $repository;
 
-    public function __construct(SettingsFilesystemRepository $repository)
+    public function __construct(SettingsRepository $repository)
     {
         $this->repository = $repository;
     }

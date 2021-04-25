@@ -1,13 +1,14 @@
 <?php
 declare(strict_types=1);
 
+use App\Domain\Gitlab\Project\SettingsRepository;
+use App\Infrastructure\Persistence\Gitlab\SettingsFilesystemRepository;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use App\Domain\Gitlab\Entity\Settings;
 use Slim\Views\TwigExtension;
 use Slim\Views\Twig;
 use App\Infrastructure\Gateway\NetworkRequest;
@@ -54,15 +55,9 @@ return function (ContainerBuilder $containerBuilder) {
     ]);
 
     $containerBuilder->addDefinitions([
-        Settings::class => function() {
-            return new Settings(
-                $_ENV['GITLAB_URL'] ?? '',
-                $_ENV['CLIENT_ID'] ?? '',
-                $_ENV['SECRET'] ?? '',
-                $_ENV['REDIRECT_URL'] ?? '',
-                $_ENV['STATE'] ?? '',
-            );
-        }
+        SettingsRepository::class => fn() => new SettingsFilesystemRepository(
+            new FilesystemAdapter('settings_fs')
+        )
     ]);
 
     $containerBuilder->addDefinitions([
@@ -88,7 +83,7 @@ return function (ContainerBuilder $containerBuilder) {
         GenerateToken::class => function(ContainerInterface $c) {
             return new GenerateToken(
                 $c->get(NetworkRequest::class),
-                $c->get(Settings::class)
+                $c->get(SettingsRepository::class)
             );
         }
     ]);
@@ -114,7 +109,7 @@ return function (ContainerBuilder $containerBuilder) {
 
             return new NetworkRequestAuthenticated(
                 $token,
-                $c->get(Settings::class),
+                $c->get(SettingsRepository::class)->get(),
                 new Client()
             );
         }

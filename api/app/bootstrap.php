@@ -64,7 +64,7 @@ register_shutdown_function($shutdownHandler);
 $app->addRoutingMiddleware();
 
 // Add Error Middleware
-$errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, true);
+$errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, false);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
 
 return [

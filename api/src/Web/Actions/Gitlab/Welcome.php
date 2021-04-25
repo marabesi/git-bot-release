@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\Web\Actions\Gitlab;
 
-use App\Domain\Gitlab\Authentication\TokenNotFound;
-use App\Domain\Gitlab\Entity\Settings;
+use App\Domain\Gitlab\Project\SettingsRepository;
 use Exception;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
@@ -16,18 +15,18 @@ class Welcome
 {
 
     private Twig $twig;
-    private Settings $settings;
+    private SettingsRepository $settingsRepository;
     private GenerateToken $generateGitlabToken;
     private TokenRepository $tokenRepository;
 
     public function __construct(
         Twig $twig,
-        Settings $settings,
+        SettingsRepository $settingsRepository,
         GenerateToken $generateGitlabToken,
         TokenRepository $tokenRepository
     ) {
         $this->twig = $twig;
-        $this->settings = $settings;
+        $this->settingsRepository = $settingsRepository;
         $this->generateGitlabToken = $generateGitlabToken;
         $this->tokenRepository = $tokenRepository;
     }
@@ -52,12 +51,13 @@ class Welcome
         }
 
         if ($code && $state) {
+            $settings = $this->settingsRepository->get();
             $token = $this->generateGitlabToken->requestToken([
-                'client_id' => $this->settings->getClientId(),
-                'client_secret' => $this->settings->getSecret(),
+                'client_id' => $settings->getClientId(),
+                'client_secret' => $settings->getSecret(),
                 'code' => $code,
-                'grant_type' => $this->settings->getGrantType(),
-                'redirect_uri' => $this->settings->getRedirectUrl(),
+                'grant_type' => $settings->getGrantType(),
+                'redirect_uri' => $settings->getRedirectUrl(),
             ]);
 
             $this->tokenRepository->storeToken($token);

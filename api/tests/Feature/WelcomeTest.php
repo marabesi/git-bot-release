@@ -4,9 +4,10 @@ namespace Tests\Feature;
 
 use App\Domain\Gitlab\Authentication\GenerateToken;
 use App\Domain\Gitlab\Authentication\TokenRepository;
-use App\Domain\Gitlab\Entity\Settings;
+use App\Domain\Gitlab\Project\SettingsRepository;
 use App\Domain\Gitlab\Version\VersionRepository;
 use PHPUnit\Framework\TestCase;
+use Tests\Feature\Stubs\EmptySettings;
 use Tests\Feature\Stubs\WithFakeToken;
 use Tests\Feature\Stubs\FakeVersionError;
 use Tests\Feature\Stubs\WithoutToken;
@@ -23,13 +24,7 @@ class WelcomeTest extends TestCase
 
     public function test_request_gitlab_token()
     {
-        $this->container->set(Settings::class, new Settings(
-            '',
-            '',
-            '',
-            '',
-            '',
-        ));
+        $this->container->set(SettingsRepository::class, new EmptySettings());
 
         $response = $this->createRequest('GET', '/request-token');
         $redirectToGitlab = $response->getHeaderLine('Location');
