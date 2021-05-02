@@ -12,7 +12,7 @@
             <button type="submit">Enable deploy via conventional commit</button>
         </form>
     {% else %}
-        <p>Hook for deploying with convetional commit already registered! Enjoy!</p>
+        <p>Hook for deploying with conventional commit already registered! Enjoy!</p>
         <form method="post" action="/projects/{{ project.id }}/hook/{{ webhook.id }}">
             <button type="submit">Remove deploy</button>
         </form>

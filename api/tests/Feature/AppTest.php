@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Feature;
 
@@ -98,6 +99,13 @@ abstract class AppTest extends TestCase
         array $queryParams = []
     ): ResponseInterface {
         return $this->createRequest('POST', $uri, $bodyParams, $queryParams);
+    }
+
+    public function get(
+        $uri,
+        array $queryParams = []
+    ): ResponseInterface {
+        return $this->createRequest('GET', $uri, [], $queryParams);
     }
 
     /**
