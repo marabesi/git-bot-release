@@ -5,17 +5,12 @@ namespace Tests\Feature;
 use App\Domain\Gitlab\Authentication\TokenRepository;
 use App\Domain\Gitlab\Project\ProjectsRepository;
 use App\Domain\Gitlab\Version\VersionRepository;
-use App\Web\Middleware\SessionMiddleware;
-use PHPUnit\Framework\TestCase;
-use Slim\Psr7\Factory\ServerRequestFactory;
 use Tests\Feature\Stubs\WithExpiredFakeToken;
 use Tests\Feature\Stubs\WithFakeToken;
-use Tests\Feature\Stubs\FakeVersionError;
 use Tests\Feature\Stubs\WithFakeVersion;
 
-class AuthorizedTest extends TestCase
+class AuthorizedTest extends AppTest
 {
-    use AppTest;
 
     public function test_list_projects()
     {

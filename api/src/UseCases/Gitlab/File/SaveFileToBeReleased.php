@@ -19,13 +19,21 @@ class SaveFileToBeReleased
 
     public function save(array $params)
     {
-        if (count($params) === 0) {
+        if (count($params) < 2) {
             throw new InvalidArgumentException('Missing parameters, fullName, id');
         }
 
         $filePathAndName = $params['fullName'];
 
         $projectId = (int) $params['id'];
+
+        if (!$projectId) {
+            throw new InvalidArgumentException('project id should not be empty');
+        }
+
+        if (!$filePathAndName) {
+            throw new InvalidArgumentException('fullName should not be empty');
+        }
 
         $fileMetadata = explode('/', $filePathAndName);
 

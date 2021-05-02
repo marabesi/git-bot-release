@@ -5,12 +5,10 @@ namespace Tests\Integration\Infrastructure\Persistence\Gitlab;
 
 use App\Domain\Gitlab\Entity\Settings;
 use App\Infrastructure\Persistence\Gitlab\SettingsFilesystemRepository;
-use PHPUnit\Framework\TestCase;
 use Tests\Feature\AppTest;
 
-class SettingsFilesystemRepositoryTest extends TestCase
+class SettingsFilesystemRepositoryTest extends AppTest
 {
-    use AppTest;
 
     public function test_store_settings()
     {

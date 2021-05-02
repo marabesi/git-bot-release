@@ -6,13 +6,11 @@ namespace Tests\Feature\Settings;
 use App\Domain\Gitlab\Entity\Settings;
 use App\UseCases\Gitlab\Settings\GetGitlabSettings;
 use App\UseCases\Gitlab\Settings\SaveGitlabSettings;
-use PHPUnit\Framework\TestCase;
 use Tests\Feature\AppTest;
 
-class SettingsTest extends TestCase
+class SettingsTest extends AppTest
 {
 
-    use AppTest;
     private Settings $settings;
     const SETTINGS_URI = '/settings';
 

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use DI\Container;
 use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -13,10 +14,7 @@ use Slim\Psr7\Factory\ServerRequestFactory;
 use UnexpectedValueException;
 use JsonException;
 
-/**
- * App Test Trait.
- */
-trait AppTest
+abstract class AppTest extends TestCase
 {
     /**
      * @var Container
@@ -37,6 +35,7 @@ trait AppTest
      */
     protected function setUp(): void
     {
+        parent::setUp();
         $bootstrap = require __DIR__ . '/../../app/bootstrap.php';
         $container = $bootstrap['container'];
         $app = $bootstrap['app'];
@@ -91,6 +90,14 @@ trait AppTest
             ->withParsedBody($bodyParams)
             ->withQueryParams($queryParams);
         return $this->app->handle($request);
+    }
+
+    public function post(
+        $uri,
+        array $bodyParams = [],
+        array $queryParams = []
+    ): ResponseInterface {
+        return $this->createRequest('POST', $uri, $bodyParams, $queryParams);
     }
 
     /**

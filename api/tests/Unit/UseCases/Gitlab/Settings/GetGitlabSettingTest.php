@@ -5,13 +5,10 @@ namespace Tests\Feature\Settings;
 use App\Domain\Gitlab\Entity\Settings;
 use App\Infrastructure\Persistence\Gitlab\SettingsFilesystemRepository;
 use App\UseCases\Gitlab\Settings\GetGitlabSettings;
-use PHPUnit\Framework\TestCase;
 use Tests\Feature\AppTest;
 
-class GetGitlabSettingTest extends TestCase
+class GetGitlabSettingTest extends AppTest
 {
-
-    use AppTest;
 
     private Settings $settings;
 

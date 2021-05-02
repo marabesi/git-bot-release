@@ -2,11 +2,8 @@
 
 namespace Tests\Feature;
 
-use PHPUnit\Framework\TestCase;
-
-class UnauthorizedTest extends TestCase
+class UnauthorizedTest extends AppTest
 {
-    use AppTest;
 
     public function test_show_link_to_try_again()
     {

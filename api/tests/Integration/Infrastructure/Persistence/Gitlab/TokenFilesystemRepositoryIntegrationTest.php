@@ -5,14 +5,12 @@ namespace Tests\Integration\Infrastructure\Persistence\Gitlab;
 
 use App\Domain\Gitlab\Authentication\TokenNotFound;
 use App\Infrastructure\Persistence\Gitlab\TokenFilesystemRepository;
-use PHPUnit\Framework\TestCase;
 use Tests\Feature\AppTest;
 
-class TokenFilesystemRepositoryIntegrationTest extends TestCase
+class TokenFilesystemRepositoryIntegrationTest extends AppTest
 {
 
     private TokenFilesystemRepository $repository;
-    use AppTest;
 
     public function test_store_token_in_the_file_system()
     {

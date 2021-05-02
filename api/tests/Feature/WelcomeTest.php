@@ -7,15 +7,13 @@ use App\Domain\Gitlab\Authentication\GenerateToken;
 use App\Domain\Gitlab\Authentication\TokenRepository;
 use App\Domain\Gitlab\Project\SettingsRepository;
 use App\Domain\Gitlab\Version\VersionRepository;
-use PHPUnit\Framework\TestCase;
 use Tests\Feature\Stubs\EmptySettings;
-use Tests\Feature\Stubs\WithFakeToken;
 use Tests\Feature\Stubs\FakeVersionError;
+use Tests\Feature\Stubs\WithFakeToken;
 use Tests\Feature\Stubs\WithoutToken;
 
-class WelcomeTest extends TestCase
+class WelcomeTest extends AppTest
 {
-    use AppTest;
 
     public function test_renders_request_token_link()
     {
