@@ -146,10 +146,10 @@ return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         Webhook::class => function() {
             return new Webhook(
-                $_ENV['WEBHOOK_INCOME_URL'],
-                $_ENV['WEBHOOK_TOKEN'],
-                (bool) $_ENV['WEBHOOK_PUSH'],
-                (bool) $_ENV['WEBHOOK_ENABLE_SSL_VERIFICATION']
+                $_ENV['WEBHOOK_INCOME_URL'] ?? '',
+                $_ENV['WEBHOOK_TOKEN'] ?? '',
+                (bool) $_ENV['WEBHOOK_PUSH'] ?? false,
+                (bool) $_ENV['WEBHOOK_ENABLE_SSL_VERIFICATION'] ?? false
             );
         }
     ]);

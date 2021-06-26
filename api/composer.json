@@ -25,6 +25,7 @@
         "vlucas/phpdotenv": "^5.0"
     },
     "require-dev": {
+        "behat/behat": "^3.8",
         "jangregor/phpstan-prophecy": "^0.8.0",
         "phpstan/extension-installer": "^1.0.4",
         "phpstan/phpstan": "^0.12.32",
