@@ -12,16 +12,29 @@ class TokenFilesystemRepositoryIntegrationTest extends AppTest
 
     private TokenFilesystemRepository $repository;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->repository = $this->container->get(TokenFilesystemRepository::class);
+        $this->repository->deleteToken();
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->repository->deleteToken();
+    }
+
     public function test_store_token_in_the_file_system()
     {
-        $this->repository = $this->container->get(TokenFilesystemRepository::class);
         $this->assertTrue($this->repository->storeToken('my_token'));
     }
 
     public function test_retrieve_previously_stored_token()
     {
         $token = 'previous_token';
-        $this->repository = $this->container->get(TokenFilesystemRepository::class);
 
         $this->repository->storeToken($token);
         $fetchToken = $this->repository->getToken();
@@ -33,7 +46,6 @@ class TokenFilesystemRepositoryIntegrationTest extends AppTest
     {
         $this->expectException(TokenNotFound::class);
 
-        $this->repository = $this->container->get(TokenFilesystemRepository::class);
         $this->repository->deleteToken();
 
         $this->repository->getToken();
@@ -41,8 +53,6 @@ class TokenFilesystemRepositoryIntegrationTest extends AppTest
 
     public function test_replace_previous_token_with_new_token()
     {
-        $this->repository = $this->container->get(TokenFilesystemRepository::class);
-
         $this->repository->storeToken('previous_token');
         $this->repository->storeToken('newest_token');
 
