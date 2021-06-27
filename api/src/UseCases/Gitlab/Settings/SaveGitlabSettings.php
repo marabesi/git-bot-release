@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\UseCases\Gitlab\Settings;
 
 use App\Domain\Gitlab\Entity\Settings;
+use App\Domain\Gitlab\Entity\Webhook;
 use App\Domain\Gitlab\Project\SettingsRepository;
 
 class SaveGitlabSettings
@@ -15,8 +16,8 @@ class SaveGitlabSettings
         $this->repository = $repository;
     }
 
-    public function save(Settings $setting): bool
+    public function save(Settings $setting, Webhook $webhook): bool
     {
-        return $this->repository->store($setting);
+        return $this->repository->store($setting, $webhook);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Infrastructure\Persistence\Gitlab;
 
 use App\Domain\Gitlab\Entity\Settings;
+use App\Domain\Gitlab\Entity\Webhook;
 use PHPUnit\Framework\TestCase;
 use App\Infrastructure\Persistence\Gitlab\SettingsFilesystemRepository;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -13,6 +14,7 @@ class SettingsFilesystemRepositoryTest extends TestCase
 {
 
     private Settings $settings;
+    private Webhook $webhook;
 
     public function setUp(): void
     {
@@ -23,6 +25,13 @@ class SettingsFilesystemRepositoryTest extends TestCase
             '111111',
             'https://allowed',
             '22222',
+        );
+
+        $this->webhook = new Webhook(
+            'http://webhook.com',
+            '123',
+            true,
+            true
         );
     }
 
@@ -38,7 +47,7 @@ class SettingsFilesystemRepositoryTest extends TestCase
 
         $repository = new SettingsFilesystemRepository($adapter);
         $this->assertTrue(
-            $repository->store($this->settings)
+            $repository->store($this->settings, $this->webhook)
         );
     }
 

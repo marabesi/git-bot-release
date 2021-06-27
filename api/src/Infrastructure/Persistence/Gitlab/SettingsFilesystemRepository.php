@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Gitlab;
 
 use App\Domain\Gitlab\Entity\Settings;
+use App\Domain\Gitlab\Entity\Webhook;
 use App\Domain\Gitlab\Project\SettingsRepository;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\CacheItem;
@@ -19,7 +20,7 @@ class SettingsFilesystemRepository implements SettingsRepository
         $this->adapter = $adapter;
     }
 
-    public function store(Settings $settings): bool
+    public function store(Settings $settings, Webhook $webhook): bool
     {
         $cache = $this->adapter->getItem(self::CACHE_KEY);
         $cache->set($settings);
@@ -44,5 +45,10 @@ class SettingsFilesystemRepository implements SettingsRepository
             '',
             '',
         );
+    }
+
+    public function delete(): bool
+    {
+        return $this->adapter->delete(self::CACHE_KEY);
     }
 }

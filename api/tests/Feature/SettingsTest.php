@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Settings;
 
 use App\Domain\Gitlab\Entity\Settings;
+use App\Domain\Gitlab\Entity\Webhook;
 use App\UseCases\Gitlab\Settings\GetGitlabSettings;
 use App\UseCases\Gitlab\Settings\SaveGitlabSettings;
 use Tests\Feature\AppTest;
@@ -12,6 +13,8 @@ class SettingsTest extends AppTest
 {
 
     private Settings $settings;
+    private Webhook $webhook;
+
     const SETTINGS_URI = '/settings';
 
     public function __construct()
@@ -23,6 +26,13 @@ class SettingsTest extends AppTest
             '999',
             'http://git-bot-release.com',
             'my_secret'
+        );
+
+        $this->webhook = new Webhook(
+            'http://webhook.com',
+            '123',
+            true,
+            true
         );
     }
 
@@ -40,6 +50,10 @@ class SettingsTest extends AppTest
             'secret' => $this->settings->getSecret(),
             'redirect_url' => $this->settings->getRedirectUrl(),
             'state' => $this->settings->getState(),
+            'webhook_url' => $this->webhook->getUrl(),
+            'webhook_token' => $this->webhook->getToken(),
+            'webhook_push_events' => $this->webhook->getPushEvents(),
+            'webhook_enable_ssl_verification' => $this->webhook->getEnableSslVerification(),
         ]);
 
         $redirectTo = $response->getHeaderLine('Location');

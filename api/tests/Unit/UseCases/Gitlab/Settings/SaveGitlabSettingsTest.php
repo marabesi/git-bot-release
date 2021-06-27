@@ -3,6 +3,7 @@
 namespace Tests\Unit\UseCases\Gitlab\Settings;
 
 use App\Domain\Gitlab\Entity\Settings;
+use App\Domain\Gitlab\Entity\Webhook;
 use App\Infrastructure\Persistence\Gitlab\SettingsFilesystemRepository;
 use App\UseCases\Gitlab\Settings\SaveGitlabSettings;
 use PHPUnit\Framework\TestCase;
@@ -10,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 class SaveGitlabSettingsTest extends TestCase
 {
     private Settings $settings;
+    private Webhook $webhook;
 
     public function setUp(): void
     {
@@ -20,6 +22,12 @@ class SaveGitlabSettingsTest extends TestCase
             'secret',
             'http://redirecto.com',
             'mystate'
+        );
+        $this->webhook = new Webhook(
+            'http://test.com',
+            '123',
+            true,
+            true
         );
     }
 
@@ -37,7 +45,7 @@ class SaveGitlabSettingsTest extends TestCase
 
         $useCase = new SaveGitlabSettings($repository);
         $this->assertTrue(
-            $useCase->save($this->settings),
+            $useCase->save($this->settings, $this->webhook),
             'Error trying to save settings'
         );
     }
