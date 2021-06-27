@@ -28,6 +28,27 @@
                 <input type="text" name="state" value="{{ setting.getState() }}" />
             </label>
         </fieldset>
+        <fieldset>
+            <label>
+                webhook url
+                <input type="text" name="webhook_url" value="{{ webhook.getUrl() }}" />
+            </label>
+            <br />
+            <label>
+                webhook token
+                <input type="text" name="webhook_token" value="{{ webhook.getToken() }}" />
+            </label>
+            <br />
+            <label>
+                webhook push events
+                <input type="text" name="webhook_push_events" value="{{ webhook.getPushEvents() }}" />
+            </label>
+            <br />
+            <label>
+                webhook enable ssl verification
+                <input type="text" name="webhook_enable_ssl_verification" value="{{ webhook.getEnableSslVerification() }}" />
+            </label>
+        </fieldset>
         <input type="submit" value="Save" />
     </form>
 

@@ -33,8 +33,8 @@ class Save
         new Webhook(
             $body['webhook_url'],
             $body['webhook_token'],
-            $body['webhook_push_events'],
-            $body['webhook_enable_ssl_verification'],
+            (bool) $body['webhook_push_events'],
+            (bool) $body['webhook_enable_ssl_verification'],
         ));
         return $response->withHeader('Location', '/');
     }

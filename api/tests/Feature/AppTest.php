@@ -98,7 +98,8 @@ abstract class AppTest extends TestCase
         array $bodyParams = [],
         array $queryParams = []
     ): ResponseInterface {
-        return $this->createRequest('POST', $uri, $bodyParams, $queryParams);
+        $normalizeBody = array_map(fn($item) => (string) $item, $bodyParams);
+        return $this->createRequest('POST', $uri, $normalizeBody, $queryParams);
     }
 
     public function get(
@@ -106,29 +107,6 @@ abstract class AppTest extends TestCase
         array $queryParams = []
     ): ResponseInterface {
         return $this->createRequest('GET', $uri, [], $queryParams);
-    }
-
-    /**
-     * Create a JSON request.
-     *
-     * @param string $method The HTTP method
-     * @param string|UriInterface $uri The URI
-     * @param array|null $data The json data
-     *
-     * @return ServerRequestInterface
-     */
-    protected function createJsonRequest(
-        string $method,
-        $uri,
-        array $data = null
-    ): ServerRequestInterface {
-        $request = $this->createRequest($method, $uri);
-
-        if ($data !== null) {
-            $request = $request->withParsedBody($data);
-        }
-
-        return $request->withHeader('Content-Type', 'application/json');
     }
 
     /**

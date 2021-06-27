@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\UseCases\Gitlab\Settings;
 
 use App\Domain\Gitlab\Entity\Settings;
+use App\Domain\Gitlab\Entity\Webhook;
 use App\Domain\Gitlab\Project\SettingsRepository;
 use JetBrains\PhpStorm\ArrayShape;
 
@@ -17,11 +18,15 @@ class GetGitlabSettings
         $this->repository = $repository;
     }
 
-    #[ArrayShape(['gitlab' => Settings::class])]
+    #[ArrayShape([
+        'gitlab' => Settings::class,
+        'webhook' => Webhook::class,
+    ])]
     public function list(): array
     {
         return [
             'gitlab' => $this->repository->get(),
+            'webhook' => $this->repository->getWebhook(),
         ];
     }
 }

@@ -25,6 +25,7 @@ class Get
 
         return $this->twig->render($response,  'templates/settings/index.twig', [
             'setting' => $settings['gitlab'],
+            'webhook' => $settings['webhook'],
         ]);
     }
 }
