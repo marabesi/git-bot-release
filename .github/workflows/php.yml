@@ -38,3 +38,6 @@ jobs:
 
     - name: Run integration test suite
       run: composer run -d api/ test:integration
+
+    - name: Run e2e test suite
+      run: composer run -d api/ test:e2e
