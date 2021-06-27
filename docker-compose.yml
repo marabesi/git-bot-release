@@ -10,11 +10,6 @@ services:
       - ./api:/var/www
     environment:
       DEBUG: $DEBUG
-      CLIENT_ID: $CLIENT_ID
-      SECRET: $SECRET
-      REDIRECT_URL: $REDIRECT_URL
-      STATE: $STATE
-      GITLAB_URL: $GITLAB_URL
       WEBHOOK_INCOME_URL: $WEBHOOK_INCOME_URL
       WEBHOOK_TOKEN: $WEBHOOK_TOKEN
       WEBHOOK_PUSH: $WEBHOOK_PUSH
