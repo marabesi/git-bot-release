@@ -37,6 +37,7 @@ use Filebase\Database;
 use GuzzleHttp\Client;
 
 return function (ContainerBuilder $containerBuilder) {
+
     $containerBuilder->addDefinitions([
         LoggerInterface::class => function (ContainerInterface $c) {
             $settings = $c->get('settings');
@@ -55,8 +56,10 @@ return function (ContainerBuilder $containerBuilder) {
     ]);
 
     $containerBuilder->addDefinitions([
-        SettingsRepository::class => fn() => new SettingsFilesystemRepository(
-            new FilesystemAdapter('settings_fs')
+        SettingsRepository::class => fn(ContainerInterface $c) => new SettingsFilesystemRepository(
+            new FilesystemAdapter(
+                sprintf('settings_fs_%s', $c->get('settings')['environment'])
+            )
         )
     ]);
 
@@ -93,10 +96,10 @@ return function (ContainerBuilder $containerBuilder) {
     ]);
 
     $containerBuilder->addDefinitions([
-        TokenRepository::class => function() {
+        TokenRepository::class => function(ContainerInterface $c) {
             return new TokenFilesystemRepository(
                 new FilesystemAdapter(
-                    'token',
+                    sprintf('token_%s', $c->get('settings')['environment']),
                     0,
                 ),
             );

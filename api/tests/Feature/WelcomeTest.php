@@ -15,6 +15,20 @@ use Tests\Feature\Stubs\WithoutToken;
 class WelcomeTest extends AppTest
 {
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $tokenRepository = $this->container->get(TokenRepository::class);
+        $tokenRepository->deleteToken();
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $tokenRepository = $this->container->get(TokenRepository::class);
+        $tokenRepository->deleteToken();
+    }
+
     public function test_renders_request_token_link()
     {
         $response = $this->createRequest('GET', '/');
