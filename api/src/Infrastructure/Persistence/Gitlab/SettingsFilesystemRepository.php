@@ -12,7 +12,9 @@ use Symfony\Component\Cache\CacheItem;
 class SettingsFilesystemRepository implements SettingsRepository
 {
 
-    private const CACHE_KEY = 'setting';
+    private const SETTINGS_CACHE_KEY = 'setting';
+    private const WEBHOOK_CACHE_KEY = 'webhook';
+
     private FilesystemAdapter $adapter;
 
     public function __construct(FilesystemAdapter $adapter)
@@ -22,16 +24,23 @@ class SettingsFilesystemRepository implements SettingsRepository
 
     public function store(Settings $settings, Webhook $webhook): bool
     {
-        $cache = $this->adapter->getItem(self::CACHE_KEY);
+        $cache = $this->adapter->getItem(self::SETTINGS_CACHE_KEY);
         $cache->set($settings);
 
-        return $this->adapter->save($cache);
+        $settingsSaved = $this->adapter->save($cache);
+
+        $cache = $this->adapter->getItem(self::WEBHOOK_CACHE_KEY);
+        $cache->set($webhook);
+
+        $webhookSaved = $this->adapter->save($cache);
+
+        return $settingsSaved && $webhookSaved;
     }
 
     public function get(): Settings
     {
         /** @var CacheItem $cached */
-        $cached = $this->adapter->getItem(self::CACHE_KEY);
+        $cached = $this->adapter->getItem(self::SETTINGS_CACHE_KEY);
         $settings = $cached->get();
 
         if ($settings) {
@@ -47,8 +56,26 @@ class SettingsFilesystemRepository implements SettingsRepository
         );
     }
 
+    public function getWebhook(): Webhook
+    {
+        /** @var CacheItem $cached */
+        $cached = $this->adapter->getItem(self::WEBHOOK_CACHE_KEY);
+        $webhook = $cached->get();
+
+        if ($webhook) {
+            return $webhook;
+        }
+
+        return new Webhook(
+            '',
+            '',
+             false,
+            false
+        );
+    }
+
     public function delete(): bool
     {
-        return $this->adapter->delete(self::CACHE_KEY);
+        return $this->adapter->delete(self::SETTINGS_CACHE_KEY);
     }
 }

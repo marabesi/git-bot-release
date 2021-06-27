@@ -25,7 +25,7 @@ class SettingsFilesystemRepositoryTest extends AppTest
         $this->filesystemRepository = $this->container->get(SettingsFilesystemRepository::class);
     }
 
-    public function test_store_settings()
+    public function test_store_settings_and_webhook()
     {
         $settingsToCache = new Settings(
             'http://gilab.com',
@@ -45,7 +45,9 @@ class SettingsFilesystemRepositoryTest extends AppTest
         $this->filesystemRepository->store($settingsToCache, $webhookToCache);
 
         $cachedSettings = $this->filesystemRepository->get();
+        $cachedWebhookSettings = $this->filesystemRepository->getWebhook();
 
         $this->assertEquals($settingsToCache, $cachedSettings);
+        $this->assertEquals($webhookToCache, $cachedWebhookSettings);
     }
 }

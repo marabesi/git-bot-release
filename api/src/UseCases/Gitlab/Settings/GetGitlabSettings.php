@@ -5,6 +5,7 @@ namespace App\UseCases\Gitlab\Settings;
 
 use App\Domain\Gitlab\Entity\Settings;
 use App\Domain\Gitlab\Project\SettingsRepository;
+use JetBrains\PhpStorm\ArrayShape;
 
 class GetGitlabSettings
 {
@@ -16,8 +17,11 @@ class GetGitlabSettings
         $this->repository = $repository;
     }
 
-    public function list(): Settings
+    #[ArrayShape(['gitlab' => Settings::class])]
+    public function list(): array
     {
-        return $this->repository->get();
+        return [
+            'gitlab' => $this->repository->get(),
+        ];
     }
 }

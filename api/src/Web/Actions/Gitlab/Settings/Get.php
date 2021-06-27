@@ -21,8 +21,10 @@ class Get
 
     public function __invoke(Request $request, Response $response)
     {
+        $settings = $this->settingsUseCase->list();
+
         return $this->twig->render($response,  'templates/settings/index.twig', [
-            'setting' => $this->settingsUseCase->list(),
+            'setting' => $settings['gitlab'],
         ]);
     }
 }

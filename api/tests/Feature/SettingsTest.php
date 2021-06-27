@@ -61,12 +61,14 @@ class SettingsTest extends AppTest
         $this->assertEquals('/', $redirectTo);
     }
 
-    public function test_list_settings()
+    public function test_list_gitlab_settings()
     {
         $saveUseCase = $this->createMock(GetGitlabSettings::class);
         $saveUseCase->expects($this->once())
             ->method('list')
-            ->willReturn($this->settings);
+            ->willReturn([
+                'gitlab' => $this->settings
+            ]);
 
         $this->container->set(GetGitlabSettings::class, $saveUseCase);
 
@@ -78,5 +80,21 @@ class SettingsTest extends AppTest
         $this->assertStringContainsString($this->settings->getSecret(), $body, 'secret does not match');
         $this->assertStringContainsString($this->settings->getRedirectUrl(), $body, 'redirect url does not match');
         $this->assertStringContainsString($this->settings->getState(), $body, 'state does not match');
+    }
+
+    public function test_list_webhook_settings()
+    {
+        $this->markTestSkipped();
+        $saveUseCase = $this->createMock(GetGitlabSettings::class);
+        $saveUseCase->expects($this->once())
+            ->method('list')
+            ->willReturn($this->settings);
+
+        $this->container->set(GetGitlabSettings::class, $saveUseCase);
+
+        $response = $this->createRequest('GET', self::SETTINGS_URI);
+        $body = (string) $response->getBody();
+
+        $this->assertStringContainsString($this->webhook->getUrl(), $body, 'webhook url does not match');
     }
 }

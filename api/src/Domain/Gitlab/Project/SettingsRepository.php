@@ -13,5 +13,7 @@ interface SettingsRepository
 
     public function get(): Settings;
 
+    public function getWebhook(): Webhook;
+
     public function delete(): bool;
 }

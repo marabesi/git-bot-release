@@ -29,4 +29,14 @@ class EmptySettings implements SettingsRepository
     {
         return true;
     }
+
+    public function getWebhook(): Webhook
+    {
+        return new Webhook(
+            '',
+            '',
+            true,
+            true,
+        );
+    }
 }

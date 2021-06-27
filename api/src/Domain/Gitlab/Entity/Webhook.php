@@ -11,8 +11,12 @@ class Webhook
     private bool $pushEvents;
     private bool $enableSslVerification;
 
-    public function __construct(string $url = '', string $token = '', bool $pushEvents = false, bool $enableSslVerification = false)
-    {
+    public function __construct(
+        string $url = '',
+        string $token = '',
+        bool $pushEvents = false,
+        bool $enableSslVerification = false
+    ) {
         $this->url = $url;
         $this->token = $token;
         $this->pushEvents = $pushEvents;

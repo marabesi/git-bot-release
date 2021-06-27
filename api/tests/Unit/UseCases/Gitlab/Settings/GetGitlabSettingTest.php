@@ -34,7 +34,7 @@ class GetGitlabSettingTest extends AppTest
         $useCase = new GetGitlabSettings($repository);
         $this->assertSame(
             $this->settings,
-            $useCase->list(),
+            $useCase->list()['gitlab'],
             'The settings saved and the settings retrieved are no the same'
         );
     }
