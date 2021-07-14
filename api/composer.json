@@ -57,6 +57,7 @@
         "test:watch": [
             "Composer\\Config::disableProcessTimeout",
             "phpunit-watcher watch < /dev/tty"
-        ]
+        ],
+        "insights": "phpinsights"
     }
 }
