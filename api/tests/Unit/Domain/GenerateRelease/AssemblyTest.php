@@ -44,7 +44,7 @@ class AssemblyTest extends TestCase
     {
         $file = new File('1', 'myfile.json', 'src/myfile.json', '{}');
 
-        $fileRepository = $this->createStub(FileRepository::class);
+        $fileRepository = $this->createMock(FileRepository::class);
         $fileRepository->method('findFile')
             ->willReturn(
                 $file
