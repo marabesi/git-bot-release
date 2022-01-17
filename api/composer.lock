@@ -132,16 +132,16 @@
         },
         {
             "name": "bref/bref",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brefphp/bref.git",
-                "reference": "5996caf41cad88f166c6c2fbbe9e6ac3b267e83f"
+                "reference": "a627683f69416812dade926792bbd9ef2cc78f66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brefphp/bref/zipball/5996caf41cad88f166c6c2fbbe9e6ac3b267e83f",
-                "reference": "5996caf41cad88f166c6c2fbbe9e6ac3b267e83f",
+                "url": "https://api.github.com/repos/brefphp/bref/zipball/a627683f69416812dade926792bbd9ef2cc78f66",
+                "reference": "a627683f69416812dade926792bbd9ef2cc78f66",
                 "shasum": ""
             },
             "require": {
@@ -194,7 +194,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brefphp/bref/issues",
-                "source": "https://github.com/brefphp/bref/tree/1.5.0"
+                "source": "https://github.com/brefphp/bref/tree/1.5.1"
             },
             "funding": [
                 {
@@ -206,7 +206,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-01-08T17:19:22+00:00"
+            "time": "2022-01-17T14:22:48+00:00"
         },
         {
             "name": "ergebnis/json-printer",
@@ -9270,5 +9270,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }
