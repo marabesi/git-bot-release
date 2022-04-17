@@ -41,3 +41,6 @@ jobs:
 
     - name: Run e2e test suite
       run: composer run -d api/ test:e2e
+
+    - name: Run coverage
+      run: composer run -d api/ test:coveralls
