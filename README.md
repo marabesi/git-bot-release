@@ -1,4 +1,5 @@
 ![PHP Composer](https://github.com/marabesi/git-bot-release/workflows/PHP%20Composer/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/marabesi/git-bot-release/badge.svg?branch=main)](https://coveralls.io/github/marabesi/git-bot-release?branch=main)
 
 # Git bot release
 
