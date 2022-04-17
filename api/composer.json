@@ -56,6 +56,7 @@
         "start": "php -S localhost:8080 -t public",
         "test:all": "phpunit tests/",
         "test:coverage": "XDEBUG_MODE=coverage phpunit --coverage-html coverage/ tests/",
+        "test:coveralls": "XDEBUG_MODE=coverage phpunit --coverage-clover build/logs/clover.xml tests/",
         "test:unit": "phpunit tests/Unit",
         "test:integration": "phpunit tests/Integration",
         "test:e2e": "phpunit tests/Feature",
