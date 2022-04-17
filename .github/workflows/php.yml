@@ -45,9 +45,9 @@ jobs:
     - name: Run coverage
       run: composer run -d api/ test:coveralls
 
-  - name: Upload coverage results to Coveralls
-    env:
-      COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    run: |
-      composer global require php-coveralls/php-coveralls
-      cd api/ php-coveralls --coverage_clover=build/logs/clover.xml -v
+    - name: Upload coverage results to Coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        composer global require php-coveralls/php-coveralls
+        cd api/ php-coveralls --coverage_clover=build/logs/clover.xml -v
