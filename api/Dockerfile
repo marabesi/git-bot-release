@@ -1,4 +1,4 @@
-FROM php:8
+FROM aronpc/php:8.1-fpm
 
 WORKDIR /var/www
 
@@ -13,17 +13,6 @@ ENV WEBHOOK_INCOME_URL 'http://localhost:8181/hook/income'
 ENV WEBHOOK_TOKEN '123'
 ENV WEBHOOK_PUSH 'true'
 ENV WEBHOOK_ENABLE_SSL_VERIFICATION 'true'
-
-RUN apt-get update && \
-    apt-get install nodejs npm git libzip-dev -y && \
-    npm install -g serverless && \
-    docker-php-ext-install -j$(nproc) zip && \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug \
-    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.remote_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 RUN echo CLIENT_ID=$CLIENT_ID >> .env && \
     echo SECRET=$SECRET >> .env && \
